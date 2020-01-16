@@ -30,21 +30,35 @@ from libqtile import layout, bar, widget
 
 from typing import List  # noqa: F401
 
+import os
+
 mod = "mod4"
+
+
+class command:
+    #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
+    autostart = os.path.join(os.path.dirname(__file__), 'bin/autostart')
+    lock = os.path.join(os.path.dirname(__file__), 'bin/lock')
+    suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
+    hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
 
 keys = [
     # Switch between windows in current stack pane
-    Key([mod], "k", lazy.layout.down()),
-    Key([mod], "j", lazy.layout.up()),
-    Key([mod], "h", lazy.layout.left()),
-    Key([mod], "j", lazy.layout.right()),
+    Key([mod], "Down", lazy.layout.down()),
+    Key([mod], "Up", lazy.layout.up()),
+    Key([mod], "Left", lazy.layout.left()),
+    Key([mod], "Right", lazy.layout.right()),
 
     # Move windows up or down in current stack
-    Key([mod, "control"], "k", lazy.layout.shuffle_down()),
-    Key([mod, "control"], "j", lazy.layout.shuffle_up()),
+    Key([mod, "control"], "Down", lazy.layout.shuffle_down()),
+    Key([mod, "control"], "Up", lazy.layout.shuffle_up()),
+    Key([mod, "control"], "Right", lazy.layout.shuffle_right()),
+    Key([mod, "control"], "Left", lazy.layout.shuffle_left()),
 
     # Switch window focus to other pane(s) of stack
     Key([mod], "space", lazy.layout.next()),
+    Key([mod], "l", lazy.spawn(command.lock)),
+    Key([mod, "control"], "l", lazy.spawn(command.suspend)),
 
     # Swap panes of split stack
     Key([mod, "shift"], "space", lazy.layout.rotate()),
@@ -63,6 +77,18 @@ keys = [
     Key([mod, "control"], "r", lazy.restart()),
     Key([mod, "control"], "q", lazy.shutdown()),
     Key([mod], "r", lazy.spawncmd()),
+
+    Key([mod],"n",lazy.spawn("networkmanager_dmenu")),
+
+    Key(
+        [], "XF86AudioRaiseVolume",
+        #lazy.spawn("pamixer -i 1")
+        lazy.spawn("google-chrome-stable")
+    ),
+    Key(
+        [], "XF86AudioLowerVolume",
+        lazy.spawn("pamixer -d 1")
+    ),
 ]
 
 groups = [Group(i) for i in "asdfuiop"]
@@ -83,7 +109,7 @@ layouts = [
     layout.Max(),
     layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
-     layout.Bsp(border_width=4),
+     layout.Bsp(border_width=4,border_normal="#000000"),
      layout.Columns(),
     # layout.Matrix(),
     # layout.MonadTall(),
@@ -112,10 +138,12 @@ screens = [
                 widget.WindowName(),
                 widget.TextBox("default config", name="default"),
                 widget.Systray(),
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
+                widget.Clock(format='%d.%m.%Y %H:%M'),
+                widget.Battery(),
+                widget.Volume(get_volume_command="pamixer --get-volume-human"),
                 widget.QuickExit(),
             ],
-            24,
+            28,
         ),
     ),
 ]
