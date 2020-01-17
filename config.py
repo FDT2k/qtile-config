@@ -26,7 +26,7 @@
 
 from libqtile.config import Key, Screen, Group, Drag, Click
 from libqtile.lazy import lazy
-from libqtile import layout, bar, widget
+from libqtile import layout, bar, widget, hook
 
 from typing import List  # noqa: F401
 
@@ -36,6 +36,10 @@ mod = "mod4"
 alt = "mod1"
 ctrl = "control"
 
+@hook.subscribe.screen_change
+def restart_on_randr(qtile, ev):
+    qtile.cmd_restart()
+
 class command:
     #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
     autostart = os.path.join(os.path.dirname(__file__), 'bin/autostart')
@@ -43,11 +47,12 @@ class command:
     suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
     hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
     home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/hsl')
+    terminal = "terminator -b"
 
 
 def set_home_layout(qtile):
-    #lazy.spawn(command.home_screen_layout)
-    lazy.restart()
+    qtile.cmd_spawn(command.home_screen_layout)
+
 
 
 keys = [
@@ -79,7 +84,7 @@ keys = [
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
     Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
-    Key([mod], "Return", lazy.spawn("xterm")),
+    Key([mod], "Return", lazy.spawn(command.terminal)),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
@@ -112,11 +117,12 @@ for i in groups:
     ])
 
 layouts = [
-    layout.Max(),
-    layout.Stack(num_stacks=2),
+#    layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
      layout.Bsp(border_width=5,border_normal="#000000"),
-     layout.Columns(),
+     layout.Max(),
+
+#     layout.Columns(),
     # layout.Matrix(),
     # layout.MonadTall(),
     # layout.MonadWide(),
@@ -156,7 +162,8 @@ screens = [
         bottom=bar.Bar([
         widget.CurrentLayout(),
             widget.GroupBox(),
-            widget.WindowName()
+            widget.WindowName(),
+            widget.Prompt(name="proj"),
             ], 30),
         )
 ]

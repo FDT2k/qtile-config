@@ -1,0 +1,11 @@
+#!/bin/bash
+
+P=$1
+WD=~/Documents/work
+DIR=$(dirname $0)
+
+cd $WD/$P
+
+atom .
+
+xterm -e "cd $WD/$P; zsh"
