@@ -33,7 +33,8 @@ from typing import List  # noqa: F401
 import os
 
 mod = "mod4"
-
+alt = "mod1"
+ctrl = "control"
 
 class command:
     #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
@@ -41,6 +42,13 @@ class command:
     lock = os.path.join(os.path.dirname(__file__), 'bin/lock')
     suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
     hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
+    home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/hsl')
+
+
+def set_home_layout(qtile):
+    #lazy.spawn(command.home_screen_layout)
+    lazy.restart()
+
 
 keys = [
     # Switch between windows in current stack pane
@@ -50,15 +58,18 @@ keys = [
     Key([mod], "Right", lazy.layout.right()),
 
     # Move windows up or down in current stack
-    Key([mod, "control"], "Down", lazy.layout.shuffle_down()),
-    Key([mod, "control"], "Up", lazy.layout.shuffle_up()),
-    Key([mod, "control"], "Right", lazy.layout.shuffle_right()),
-    Key([mod, "control"], "Left", lazy.layout.shuffle_left()),
+    Key([mod, ctrl], "Down", lazy.layout.shuffle_down()),
+    Key([mod, ctrl], "Up", lazy.layout.shuffle_up()),
+    Key([mod, ctrl], "Right", lazy.layout.shuffle_right()),
+    Key([mod, ctrl], "Left", lazy.layout.shuffle_left()),
+    Key([mod, ctrl], "l", lazy.spawn(command.suspend)),
+    Key([mod, ctrl], "r", lazy.restart()),
+    Key([mod, ctrl], "q", lazy.shutdown()),
+    Key([mod], "l", lazy.spawn(command.lock)),
+
 
     # Switch window focus to other pane(s) of stack
     Key([mod], "space", lazy.layout.next()),
-    Key([mod], "l", lazy.spawn(command.lock)),
-    Key([mod, "control"], "l", lazy.spawn(command.suspend)),
 
     # Swap panes of split stack
     Key([mod, "shift"], "space", lazy.layout.rotate()),
@@ -74,21 +85,16 @@ keys = [
     Key([mod], "Tab", lazy.next_layout()),
     Key([mod], "w", lazy.window.kill()),
 
-    Key([mod, "control"], "r", lazy.restart()),
-    Key([mod, "control"], "q", lazy.shutdown()),
+
     Key([mod], "r", lazy.spawncmd()),
 
-    Key([mod],"n",lazy.spawn("networkmanager_dmenu")),
+    Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
+    Key([mod, alt], "q", lazy.spawn("google-chrome-stable")),
+    Key([mod, alt], "w", lazy.spawn("thunderbird")),
+    Key([mod, alt], "e", lazy.spawn("pavucontrol")),
+    Key([mod, alt], "a", lazy.function(set_home_layout)),
 
-    Key(
-        [], "XF86AudioRaiseVolume",
-        #lazy.spawn("pamixer -i 1")
-        lazy.spawn("google-chrome-stable")
-    ),
-    Key(
-        [], "XF86AudioLowerVolume",
-        lazy.spawn("pamixer -d 1")
-    ),
+
 ]
 
 groups = [Group(i) for i in "asdfuiop"]
@@ -109,7 +115,7 @@ layouts = [
     layout.Max(),
     layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
-     layout.Bsp(border_width=4,border_normal="#000000"),
+     layout.Bsp(border_width=5,border_normal="#000000"),
      layout.Columns(),
     # layout.Matrix(),
     # layout.MonadTall(),
@@ -146,6 +152,13 @@ screens = [
             28,
         ),
     ),
+    Screen(
+        bottom=bar.Bar([
+        widget.CurrentLayout(),
+            widget.GroupBox(),
+            widget.WindowName()
+            ], 30),
+        )
 ]
 
 # Drag floating layouts.
