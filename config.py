@@ -47,13 +47,16 @@ class command:
     suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
     hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
     home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/hsl')
+    work_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/wsl.sh')
     terminal = "terminator -b"
 
 
-def set_home_layout(qtile):
+def set_vertical_monitor_layout(qtile):
     qtile.cmd_spawn(command.home_screen_layout)
 
 
+def set_horizontal_monitor_layout(qtile):
+    qtile.cmd_spawn(command.work_screen_layout)
 
 keys = [
     # Switch between windows in current stack pane
@@ -97,7 +100,10 @@ keys = [
     Key([mod, alt], "q", lazy.spawn("google-chrome-stable")),
     Key([mod, alt], "w", lazy.spawn("thunderbird")),
     Key([mod, alt], "e", lazy.spawn("pavucontrol")),
-    Key([mod, alt], "a", lazy.function(set_home_layout)),
+
+    # launch graphic layout
+    Key([mod, alt], "a", lazy.function(set_vertical_monitor_layout)),
+    Key([mod, alt], "s", lazy.function(set_horizontal_monitor_layout)),
 
 
 ]
