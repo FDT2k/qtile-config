@@ -102,8 +102,8 @@ keys = [
     Key([mod, alt], "e", lazy.spawn("pavucontrol")),
 
     # launch graphic layout
-    Key([mod, alt], "a", lazy.function(set_vertical_monitor_layout)),
-    Key([mod, alt], "s", lazy.function(set_horizontal_monitor_layout)),
+    Key([mod, alt], "v", lazy.function(set_vertical_monitor_layout)),
+    Key([mod, alt], "h", lazy.function(set_horizontal_monitor_layout)),
 
 
 ]
