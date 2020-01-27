@@ -151,7 +151,7 @@ screens = [
         bottom=bar.Bar(
             [
                 widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.GroupBox(disable_drag= True),
                 widget.Prompt(),
                 widget.WindowName(),
                 widget.TextBox("default config", name="default"),

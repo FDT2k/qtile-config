@@ -3,9 +3,12 @@
 P=$1
 WD=~/Documents/work
 DIR=$(dirname $0)
+LDIR=$(pwd)
+#cd $WD/$P
 
-cd $WD/$P
+#atom .
+echo $LDIR
+#xterm -e "cd $WD/$P; zsh"
 
 atom .
-
-xterm -e "cd $WD/$P; zsh"
+xterm -e "zsh; npx run test"
