@@ -35,10 +35,29 @@ import os
 mod = "mod4"
 alt = "mod1"
 ctrl = "control"
+shft =  "shift"
 
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):
     qtile.cmd_restart()
+
+@hook.subscribe.startup_once
+def autostart():
+    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    subprocess.call([home])
+
+@hook.subscribe.client_new
+def agroup(client):
+    # replace class_name with the actual
+    # class name of the app
+    # you can use xprop to find it
+    apps = {'Telegram': 'p'}
+
+    wm_class = client.window.get_wm_class()[0]
+    group = apps.get(wm_class, None)
+    if group:
+        client.togroup(group)
+
 
 class command:
     #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
@@ -80,13 +99,13 @@ keys = [
     Key([mod], "space", lazy.layout.next()),
 
     # Swap panes of split stack
-    Key([mod, "shift"], "space", lazy.layout.rotate()),
+    Key([mod, shft], "space", lazy.layout.rotate()),
 
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
+    Key([mod, shft], "Return", lazy.layout.toggle_split()),
     Key([mod], "Return", lazy.spawn(command.terminal)),
 
     # Toggle between different layouts as defined below
@@ -116,11 +135,13 @@ for i in groups:
         Key([mod], i.name, lazy.group[i.name].toscreen()),
 
         # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True)),
+        Key([mod, shft], i.name, lazy.window.togroup(i.name, switch_group=True)),
         # Or, use below if you prefer not to switch to that group.
         # # mod1 + shift + letter of group = move focused window to group
-        # Key([mod, "shift"], i.name, lazy.window.togroup(i.name)),
+         Key([mod, shft, ctrl], i.name, lazy.window.togroup(i.name)),
     ])
+
+
 
 layouts = [
 #    layout.Stack(num_stacks=2),
@@ -131,12 +152,17 @@ layouts = [
 #     layout.Columns(),
     # layout.Matrix(),
     # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
+     layout.MonadWide(),
+     layout.RatioTile(),
     # layout.Tile(),
-    # layout.TreeTab(),
+     layout.TreeTab(
+        border_width=0,
+        vspace=0,
+        active_fg="000000",
+        active_bg="ffffff"
+     ),
     # layout.VerticalTile(),
-    # layout.Zoomy(),
+     layout.Zoomy(columnwidth=500),
 ]
 
 widget_defaults = dict(
@@ -148,7 +174,7 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
                 widget.CurrentLayout(),
                 widget.GroupBox(disable_drag= True),
@@ -165,9 +191,9 @@ screens = [
         ),
     ),
     Screen(
-        bottom=bar.Bar([
-        widget.CurrentLayout(),
-            widget.GroupBox(),
+        top=bar.Bar([
+            widget.CurrentLayout(),
+            widget.GroupBox(disable_drag= True),
             widget.WindowName(),
             widget.Prompt(name="proj"),
             ], 30),
