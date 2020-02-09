@@ -51,7 +51,12 @@ def agroup(client):
     # replace class_name with the actual
     # class name of the app
     # you can use xprop to find it
-    apps = {'Telegram': 'p'}
+    apps = {
+            'Telegram': 'p',
+            'VirtualBox Manager':'o',
+            'Mail':'p',
+            'discord':'p'
+            }
 
     wm_class = client.window.get_wm_class()[0]
     group = apps.get(wm_class, None)
@@ -116,7 +121,7 @@ keys = [
     Key([mod], "r", lazy.spawncmd()),
 
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
-    Key([mod, alt], "q", lazy.spawn("google-chrome-stable")),
+    Key([mod, alt], "q", lazy.spawn("brave")),
     Key([mod, alt], "w", lazy.spawn("thunderbird")),
     Key([mod, alt], "e", lazy.spawn("pavucontrol")),
 
@@ -129,6 +134,7 @@ keys = [
 
 groups = [Group(i) for i in "asdfuiop"]
 
+#groups.extend([Group('comm')])
 for i in groups:
     keys.extend([
         # mod1 + letter of group = switch to group
@@ -194,6 +200,7 @@ screens = [
         top=bar.Bar([
             widget.CurrentLayout(),
             widget.GroupBox(disable_drag= True),
+            widget.Prompt(),
             widget.WindowName(),
             widget.Prompt(name="proj"),
             ], 30),
