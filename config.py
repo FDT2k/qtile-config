@@ -30,6 +30,12 @@ from libqtile import layout, bar, widget, hook
 
 from typing import List  # noqa: F401
 
+#from libqtile import xcbq
+#xcbq.keysyms["XF86AudioRaiseVolume"] = 0x1008ff13
+#xcbq.keysyms["XF86AudioLowerVolume"] = 0x1008ff11
+#xcbq.keysyms["XF86AudioMute"] = 0x1008ff12
+
+
 import os
 
 mod = "mod4"
@@ -55,7 +61,9 @@ def agroup(client):
             'Telegram': 'p',
             'VirtualBox Manager':'o',
             'Mail':'p',
-            'discord':'p'
+            'discord':'p',
+            'spotify':'i',
+            'Spotify':'i'
             }
 
     wm_class = client.window.get_wm_class()[0]
@@ -72,6 +80,7 @@ class command:
     hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
     home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/hsl')
     work_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/wsl.sh')
+    samsung_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/samsung_uwide.sh')
     terminal = "terminator -b"
 
 
@@ -81,6 +90,9 @@ def set_vertical_monitor_layout(qtile):
 
 def set_horizontal_monitor_layout(qtile):
     qtile.cmd_spawn(command.work_screen_layout)
+
+def set_samsung_monitor_layout(qtile):
+    qtile.cmd_spawn(command.samsung_screen_layout)
 
 keys = [
     # Switch between windows in current stack pane
@@ -100,10 +112,6 @@ keys = [
     Key([mod], "l", lazy.spawn(command.lock)),
 
 
-    # Switch window focus to other pane(s) of stack
-    Key([mod], "space", lazy.layout.next()),
-
-    # Swap panes of split stack
     Key([mod, shft], "space", lazy.layout.rotate()),
 
     # Toggle between split and unsplit sides of stack.
@@ -126,9 +134,13 @@ keys = [
     Key([mod, alt], "e", lazy.spawn("pavucontrol")),
 
     # launch graphic layout
-    Key([mod, alt], "v", lazy.function(set_vertical_monitor_layout)),
-    Key([mod, alt], "h", lazy.function(set_horizontal_monitor_layout)),
-
+    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
+    Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
+    Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
+    Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("lowervolume")),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("raisevolume")),
+    Key([], 'Print', lazy.spawn("import ~/Pictures/$(date +'%Y%m%d-%H%m%S').png"))
 
 ]
 
@@ -168,7 +180,7 @@ layouts = [
         active_bg="ffffff"
      ),
     # layout.VerticalTile(),
-     layout.Zoomy(columnwidth=500),
+#     layout.Zoomy(columnwidth=500),
 ]
 
 widget_defaults = dict(
@@ -200,7 +212,7 @@ screens = [
         top=bar.Bar([
             widget.CurrentLayout(),
             widget.GroupBox(disable_drag= True),
-            widget.Prompt(),
+#            widget.Prompt(),
             widget.WindowName(),
             widget.Prompt(name="proj"),
             ], 30),

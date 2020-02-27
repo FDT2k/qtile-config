@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mixer --set-volume $(($(pamixer --get-volume) - 1))
