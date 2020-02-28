@@ -24,7 +24,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from libqtile.config import Key, Screen, Group, Drag, Click
+from libqtile.config import Key, Screen, Group, Drag, Click, Match
 from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
 
@@ -37,7 +37,7 @@ from typing import List  # noqa: F401
 
 
 import os
-
+import subprocess
 mod = "mod4"
 alt = "mod1"
 ctrl = "control"
@@ -78,10 +78,13 @@ class command:
     lock = os.path.join(os.path.dirname(__file__), 'bin/lock')
     suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
     hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
-    home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/hsl')
-    work_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/wsl.sh')
-    samsung_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/samsung_uwide.sh')
+    home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/home-layout.sh')
+    work_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/vertical_layout.sh')
+    samsung_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-no-edp.sh')
     terminal = "terminator -b"
+    volume_up = "raisevolume"
+    volume_down = "lowervolume"
+    shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
 
 
 def set_vertical_monitor_layout(qtile):
@@ -93,6 +96,7 @@ def set_horizontal_monitor_layout(qtile):
 
 def set_samsung_monitor_layout(qtile):
     qtile.cmd_spawn(command.samsung_screen_layout)
+
 
 keys = [
     # Switch between windows in current stack pane
@@ -138,13 +142,25 @@ keys = [
     Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
     Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
     Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
-    Key([], "XF86AudioLowerVolume", lazy.spawn("lowervolume")),
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("raisevolume")),
-    Key([], 'Print', lazy.spawn("import ~/Pictures/$(date +'%Y%m%d-%H%m%S').png"))
+    Key([], "XF86AudioLowerVolume", lazy.spawn(command.volume_down)),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn(command.volume_up)),
+    Key([], 'Print', lazy.spawn(command.shoot))
 
 ]
 
-groups = [Group(i) for i in "asdfuiop"]
+#groups = [Group(i) for i in "asdfuiop"]
+
+groups = [
+    Group('a', label= 'wrk(a)'),
+    Group('s', label='wrk(s)'),
+    Group('d',label='proj(d)'),
+    Group('f', label='read(f)'),
+    Group('u', label='game(u)'),
+    Group('i'),
+    Group('o',label='virt(o)'),
+    Group('p',label='comlink(p)'),
+    Group(name='l',label='plop', matches=[Match(wm_class=["firefox"])]),
+]
 
 #groups.extend([Group('comm')])
 for i in groups:
