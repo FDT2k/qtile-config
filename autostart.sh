@@ -1,10 +1,10 @@
 #!/bin/bash
-bash bin/last-layout
 
 telegram-desktop &
 thunderbird &
 discord &
 
-sleep 5
+sleep 1
+bash bin/last-layout >> ~/.config/qtile/layout.log
 
 feh --bg-fill ~/background.jpg &

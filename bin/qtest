@@ -1,3 +1,2 @@
 #!/bin/bash
-
-python3 ~/.config/qtile/config.py
+python2 -m py_compile ~/.config/qtile/config.py

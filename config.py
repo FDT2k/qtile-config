@@ -24,7 +24,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from libqtile.config import Key, Screen, Group, Drag, Click, Match
+from libqtile.config import Key, Screen, Group, Drag, Click, Match, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
 
@@ -47,7 +47,7 @@ shft =  "shift"
 def restart_on_randr(qtile, ev):
     qtile.cmd_restart()
 
-@hook.subscribe.startup_once
+@hook.subscribe.startup
 def autostart():
     home = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.call([home])
@@ -86,6 +86,10 @@ class command:
     volume_down = "lowervolume"
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
 
+class theme:
+    bg = "#283033"
+    fg = "#FFFFFF"
+    bg_active = "#ea3b0a"
 
 def set_vertical_monitor_layout(qtile):
     qtile.cmd_spawn(command.home_screen_layout)
@@ -144,7 +148,12 @@ keys = [
     Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
     Key([], "XF86AudioLowerVolume", lazy.spawn(command.volume_down)),
     Key([], "XF86AudioRaiseVolume", lazy.spawn(command.volume_up)),
-    Key([], 'Print', lazy.spawn(command.shoot))
+    Key([], 'Print', lazy.spawn(command.shoot)),
+
+
+
+#    Key([], 'F11', lazy.group['scratchpad'].dropdown_toggle('term')),
+#    Key([], 'F12', lazy.group['scratchpad'].dropdown_toggle('qshell'))
 
 ]
 
@@ -153,13 +162,19 @@ keys = [
 groups = [
     Group('a', label= 'wrk(a)'),
     Group('s', label='wrk(s)'),
-    Group('d',label='proj(d)'),
+    Group('d', label='proj(d)'),
     Group('f', label='read(f)'),
-    Group('u', label='game(u)'),
+    Group('u', label='media(u)'),
     Group('i'),
-    Group('o',label='virt(o)'),
-    Group('p',label='comlink(p)'),
-    Group(name='l',label='plop', matches=[Match(wm_class=["firefox"])]),
+    Group('o', label='virt(o)'),
+    Group('p', label='comlink(p)'),
+    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
+    Group('y', label= 'work(y)'),
+    Group('x', label= 'work(x)'),
+    Group('c', label= 'work(c)')
+
+   # ScratchPad("scratchpad", [
+   # ]),
 ]
 
 #groups.extend([Group('comm')])
@@ -180,14 +195,19 @@ for i in groups:
 layouts = [
 #    layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
-     layout.Bsp(border_width=5,border_normal="#000000"),
+     layout.Bsp(
+                border_width=2,
+                border_focus=theme.bg_active,
+                border_normal=theme.bg,
+                margin=5
+                ),
      layout.Max(),
 
 #     layout.Columns(),
     # layout.Matrix(),
-    # layout.MonadTall(),
+     layout.MonadTall(),
      layout.MonadWide(),
-     layout.RatioTile(),
+#     layout.RatioTile(),
     # layout.Tile(),
      layout.TreeTab(
         border_width=0,
@@ -211,7 +231,16 @@ screens = [
         top=bar.Bar(
             [
                 widget.CurrentLayout(),
-                widget.GroupBox(disable_drag= True),
+                widget.GroupBox(disable_drag= True,
+                                background=theme.bg,
+                                foreground=theme.fg,
+                                active='#ffffff',
+                                this_current_screen_border=theme.bg_active,
+                                borderwidth=1,
+                                highlight_method='block',
+                                font='Open Sans',
+                                fontsize=12
+                                ),
                 widget.Prompt(),
                 widget.WindowName(),
                 widget.TextBox("default config", name="default"),
@@ -222,6 +251,7 @@ screens = [
                 widget.QuickExit(),
             ],
             28,
+            background=theme.bg
         ),
     ),
     Screen(
