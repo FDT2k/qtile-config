@@ -117,9 +117,13 @@ keys = [
     Key([mod, ctrl], "Up", lazy.layout.shuffle_up()),
     Key([mod, ctrl], "Right", lazy.layout.shuffle_right()),
     Key([mod, ctrl], "Left", lazy.layout.shuffle_left()),
-    Key([mod, ctrl], "l", lazy.spawn(command.suspend)),
 
+    Key([mod, alt], "Down", lazy.layout.grow_down()),
+    Key([mod, alt], "Up", lazy.layout.grow_up()),
+    Key([mod, alt], "Left", lazy.layout.grow_left()),
+    Key([mod, alt], "Right", lazy.layout.grow_right()),
 
+    Key([mod, shft], "Return", lazy.layout.toggle_split()),
 
 
     # Computer control
@@ -132,14 +136,10 @@ keys = [
     Key([mod], "w", lazy.window.kill()),
     Key([mod], "space", lazy.next_layout()),
     Key([mod], "Tab", lazy.screen.next_group()),
+    Key([mod, ctrl], "l", lazy.spawn(command.suspend)),
 
 
 
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
-    Key([mod, shft], "Return", lazy.layout.toggle_split()),
 
     # Toggle between different layouts as defined below
 
