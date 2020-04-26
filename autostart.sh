@@ -3,6 +3,7 @@
 telegram-desktop &
 thunderbird &
 discord &
+bin/clickup &
 
 sleep 1
 bash bin/last-layout >> ~/.config/qtile/layout.log

@@ -63,7 +63,8 @@ def agroup(client):
             'Mail':'p',
             'discord':'p',
             'spotify':'i',
-            'Spotify':'i'
+            'Spotify':'i',
+        'crx_edcmabgkbicempmpgmniellhbjopafjh':'s'
             }
 
     wm_class = client.window.get_wm_class()[0]
@@ -81,6 +82,7 @@ class command:
     home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/home-layout.sh')
     work_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/vertical_layout.sh')
     samsung_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-no-edp.sh')
+    samsung_screen_dual_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-with-edp.sh')
     terminal = "terminator -b"
     volume_up = "raisevolume"
     volume_down = "lowervolume"
@@ -101,6 +103,8 @@ def set_horizontal_monitor_layout(qtile):
 def set_samsung_monitor_layout(qtile):
     qtile.cmd_spawn(command.samsung_screen_layout)
 
+def set_samsung_monitor_dual_layout(qtile):
+    qtile.cmd_spawn(command.samsung_screen_dual_layout)
 
 keys = [
     # Switch between windows in current stack pane
@@ -125,6 +129,7 @@ keys = [
 
     Key([mod, shft], "Return", lazy.layout.toggle_split()),
 
+    Key([mod, shft], "n", lazy.layout.normalize()),
 
     # Computer control
     Key([mod, ctrl], "r", lazy.restart()),
@@ -136,6 +141,7 @@ keys = [
     Key([mod], "w", lazy.window.kill()),
     Key([mod], "space", lazy.next_layout()),
     Key([mod], "Tab", lazy.screen.next_group()),
+    Key([mod, shft], "Tab", lazy.screen.prev_group()),
     Key([mod, ctrl], "l", lazy.spawn(command.suspend)),
 
 
@@ -158,6 +164,7 @@ keys = [
     Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
     Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
     Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
+    Key([mod, alt], "v", lazy.function(set_samsung_monitor_dual_layout)),
 
 
     # sounds & printscreen
@@ -171,18 +178,20 @@ keys = [
 #groups = [Group(i) for i in "asdfuiop"]
 
 groups = [
-    Group('a', label= 'wrk(a)'),
-    Group('s', label='wrk(s)'),
-    Group('d', label='proj(d)'),
-    Group('f', label='read(f)'),
-    Group('u', label='media(u)'),
-    Group('i'),
+    Group('a', label='read(a)'),
+    Group('s', label='tasks(s)'),
+    Group('d', label='git(d)'),
+    Group('f', label='sysad(f)'),
+    Group('u', label='sysad(u)'),
+    Group('i', label='virt(i)'),
     Group('o', label='virt(o)'),
     Group('p', label='comlink(p)'),
-    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
+#    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
     Group('y', label= 'work(y)'),
     Group('x', label= 'work(x)'),
-    Group('c', label= 'work(c)')
+    Group('c', label= 'work(c)'),
+    Group('v', label= 'work(v)'),
+    Group('b', label= 'work(b)')
 
 ]
 
