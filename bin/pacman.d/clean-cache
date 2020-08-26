@@ -1,0 +1,1 @@
+terminator -b  -e 'paccache -rk1'  -p hold

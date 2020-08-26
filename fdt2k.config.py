@@ -89,6 +89,7 @@ class command:
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
     browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
     run = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d Run')
+    pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
 
 class theme:
     bg = "#283033"
@@ -161,6 +162,7 @@ keys = [
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
     Key([mod, alt], "q", lazy.spawn(command.browser)),
     Key([mod, alt], "r", lazy.spawn(command.run)),
+    Key([mod, alt], "p", lazy.spawn(command.pacman)),
     Key([mod, alt], "w", lazy.spawn("thunderbird")),
     Key([mod, alt], "e", lazy.spawn("pavucontrol")),
     Key([mod, alt], "a", lazy.spawn("nautilus")),
