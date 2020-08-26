@@ -87,11 +87,14 @@ class command:
     volume_up = "raisevolume"
     volume_down = "lowervolume"
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
+    browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
+    run = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d Run')
 
 class theme:
     bg = "#283033"
     fg = "#FFFFFF"
     bg_active = "#ea3b0a"
+    margin = 5
 
 def set_vertical_monitor_layout(qtile):
     qtile.cmd_spawn(command.home_screen_layout)
@@ -156,10 +159,11 @@ keys = [
     #app shortcuts
 
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
-    Key([mod, alt], "q", lazy.spawn("brave")),
+    Key([mod, alt], "q", lazy.spawn(command.browser)),
+    Key([mod, alt], "r", lazy.spawn(command.run)),
     Key([mod, alt], "w", lazy.spawn("thunderbird")),
     Key([mod, alt], "e", lazy.spawn("pavucontrol")),
-
+    Key([mod, alt], "a", lazy.spawn("nautilus")),
     # launch graphic layout
     Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
     Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
@@ -241,7 +245,7 @@ layouts = [
                 border_width=2,
                 border_focus=theme.bg_active,
                 border_normal=theme.bg,
-                margin=5
+                margin=theme.margin
                 ),
      layout.Max(),
 
