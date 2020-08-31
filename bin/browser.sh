@@ -7,7 +7,7 @@ chromium
 firefox
 quit")
 
-choice=$(echo -e "${options[@]}" | dmenu -i -p 'Browser: ')
+choice=$(echo -e "${options[@]}" | cldmenu -i -p 'Browser: ')
 
 case "$choice" in
 	quit)

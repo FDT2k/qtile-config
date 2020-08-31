@@ -64,7 +64,8 @@ def agroup(client):
             'discord':'p',
             'spotify':'i',
             'Spotify':'i',
-        'crx_edcmabgkbicempmpgmniellhbjopafjh':'s'
+            'crx_edcmabgkbicempmpgmniellhbjopafjh':'s',
+            'calendar.google.com':'s'
             }
 
     wm_class = client.window.get_wm_class()[0]
@@ -184,20 +185,20 @@ keys = [
 #groups = [Group(i) for i in "asdfuiop"]
 
 groups = [
-    Group('a', label='read(a)'),
-    Group('s', label='tasks(s)'),
-    Group('d', label='git(d)'),
-    Group('f', label='sysad(f)'),
-    Group('u', label='sysad(u)'),
-    Group('i', label='virt(i)'),
-    Group('o', label='virt(o)'),
-    Group('p', label='comlink(p)'),
+    Group('a', label='a'),
+    Group('s', label='s'),
+    Group('d', label='d'),
+    Group('f', label='f'),
+    Group('u', label='u'),
+    Group('i', label='i'),
+    Group('o', label='o'),
+    Group('p', label='p'),
 #    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
-    Group('y', label= 'work(y)'),
-    Group('x', label= 'work(x)'),
-    Group('c', label= 'work(c)'),
-    Group('v', label= 'work(v)'),
-    Group('b', label= 'work(b)')
+    Group('y', label= 'y'),
+    Group('x', label= 'x'),
+    Group('c', label= 'c'),
+    Group('v', label= 'v'),
+    Group('b', label= 'b')
 
 ]
 
@@ -274,28 +275,89 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+FONT_SIZE=12
+
 screens = [
     Screen(
         top=bar.Bar(
             [
                 widget.CurrentLayout(),
+
+                 widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
                 widget.GroupBox(disable_drag= True,
-                                background=theme.bg,
+                                background="#CACACA",
                                 foreground=theme.fg,
-                                active='#ffffff',
+                                active='#000000',
+                                inactive= "#999999",
                                 this_current_screen_border=theme.bg_active,
                                 borderwidth=1,
                                 highlight_method='block',
                                 font='Open Sans',
                                 fontsize=12
                                 ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◤ ",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
                 widget.Prompt(),
-                widget.WindowName(),
-                widget.TextBox("default config", name="default"),
+
+               
+                widget.WindowName(padding=0),
+               
+               # widget.TextBox("default config", name="default"),
+
+                 widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.NetGraph(
+                    bandwidth_type="up",
+                    type="linefill",
+                    background="#CACACA",
+
+                    line_width=1
+                ),
+               
+                 widget.CPUGraph(
+                    type="box",
+                    graph_color=theme.bg_active,
+                    border_color=theme.bg_active,
+                    background="#CACACA",
+                    border_width=2,
+                    line_width=1
+                ),
+                 widget.MemoryGraph(
+                    type="box",
+                    graph_color=theme.bg_active,
+                    border_color=theme.bg_active,
+                    background="#CACACA",
+
+                    border_width=2,
+                    line_width=1
+                ),
+                 widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◤ ",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
                 widget.Systray(),
                 widget.Clock(format='%d.%m.%Y %H:%M'),
-                widget.Battery(),
-                widget.Volume(get_volume_command="pamixer --get-volume-human"),
+                widget.BatteryIcon(),
+         #       widget.Volume(get_volume_command="pamixer --get-volume",emoji=True),
                 widget.QuickExit(),
             ],
             28,

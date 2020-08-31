@@ -2,7 +2,6 @@
 
 telegram-desktop &
 thunderbird &
-discord &
 bin/clickup &
 
 sleep 1
