@@ -89,7 +89,9 @@ class command:
     volume_down = "lowervolume"
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
     browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
-    run = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d Run')
+    app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
+    configure = os.path.join(os.path.dirname(__file__), 'bin/run.sh configure.d Configure')
+    run = 'cldmenu_run'
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
 
 class theme:
@@ -162,11 +164,11 @@ keys = [
 
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
     Key([mod, alt], "q", lazy.spawn(command.browser)),
+    Key([mod, alt], "a", lazy.spawn(command.app_menu)),
     Key([mod, alt], "r", lazy.spawn(command.run)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
-    Key([mod, alt], "w", lazy.spawn("thunderbird")),
-    Key([mod, alt], "e", lazy.spawn("pavucontrol")),
-    Key([mod, alt], "a", lazy.spawn("nautilus")),
+
+    Key([mod, alt], "e", lazy.spawn(command.configure)),
     # launch graphic layout
     Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
     Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
