@@ -93,6 +93,7 @@ class command:
     configure = os.path.join(os.path.dirname(__file__), 'bin/run.sh configure.d Configure')
     run = 'cldmenu_run'
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
+    screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
 
 class theme:
     bg = "#283033"
@@ -169,6 +170,7 @@ keys = [
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
+    Key([mod, alt], "l", lazy.spawn(command.screen_layout)),
     # launch graphic layout
     Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
     Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
