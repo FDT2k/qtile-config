@@ -93,6 +93,7 @@ class command:
     configure = os.path.join(os.path.dirname(__file__), 'bin/run.sh configure.d Configure')
     run = 'cldmenu_run'
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
+    barrier = os.path.join(os.path.dirname(__file__), 'bin/run.sh barrier.d Barrier')
     screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
 
 class theme:
@@ -168,6 +169,7 @@ keys = [
     Key([mod, alt], "a", lazy.spawn(command.app_menu)),
     Key([mod, alt], "r", lazy.spawn(command.run)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
+    Key([mod, alt], "b", lazy.spawn(command.barrier)),
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
     Key([mod, alt], "l", lazy.spawn(command.screen_layout)),
