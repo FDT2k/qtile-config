@@ -1,1 +1,4 @@
-terminator -b  -e 'paccache -rk1'  -p hold
+#!/bin/bash
+CMD="sudo paccache -rk1"
+#CMD='bash'
+floatterm "$CMD"

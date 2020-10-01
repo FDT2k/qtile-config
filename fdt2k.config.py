@@ -402,6 +402,7 @@ floating_layout = layout.Floating(float_rules=[
     {'wmclass': 'file_progress'},
     {'wmclass': 'notification'},
     {'wmclass': 'splash'},
+    {'role': 'dialog'},
     {'wmclass': 'toolbar'},
     {'wmclass': 'confirmreset'},  # gitk
     {'wmclass': 'makebranch'},  # gitk
@@ -409,7 +410,7 @@ floating_layout = layout.Floating(float_rules=[
     {'wname': 'branchdialog'},  # gitk
     {'wname': 'pinentry'},  # GPG key password entry
     {'wmclass': 'ssh-askpass'},  # ssh-askpass
-])
+], border_color=theme.bg_active)
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 
