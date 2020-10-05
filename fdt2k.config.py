@@ -91,9 +91,10 @@ class command:
     browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
     app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
     configure = os.path.join(os.path.dirname(__file__), 'bin/run.sh configure.d Configure')
-    run = 'cldmenu_run'
+    run = os.path.join(os.path.dirname(__file__), 'bin/run')
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
     barrier = os.path.join(os.path.dirname(__file__), 'bin/run.sh barrier.d Barrier')
+    sound = os.path.join(os.path.dirname(__file__), 'bin/run.sh sound.d "Sound Output"')
     screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
 
 class theme:
@@ -159,7 +160,7 @@ keys = [
     # Toggle between different layouts as defined below
 
 
-    Key([mod], "r", lazy.spawncmd()),
+    #Key([mod], "r", lazy.spawncmd()),
 
 
     #app shortcuts
@@ -167,11 +168,12 @@ keys = [
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
     Key([mod, alt], "q", lazy.spawn(command.browser)),
     Key([mod, alt], "a", lazy.spawn(command.app_menu)),
-    Key([mod, alt], "r", lazy.spawn(command.run)),
+    Key([mod], "r", lazy.spawn(command.run)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
     Key([mod, alt], "b", lazy.spawn(command.barrier)),
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
+    Key([mod, alt], "s", lazy.spawn(command.sound)),
     Key([mod, alt], "l", lazy.spawn(command.screen_layout)),
     # launch graphic layout
     Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
@@ -184,6 +186,8 @@ keys = [
     Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
     Key([], "XF86AudioLowerVolume", lazy.spawn(command.volume_down)),
     Key([], "XF86AudioRaiseVolume", lazy.spawn(command.volume_up)),
+    #Key([mod,alt], "-", lazy.spawn(command.volume_down)),
+    #Key([mod,alt], "-", lazy.spawn(command.volume_up)),
     Key([], 'Print', lazy.spawn(command.shoot)),
 
 ]
@@ -376,7 +380,8 @@ screens = [
             widget.GroupBox(disable_drag= True),
 #            widget.Prompt(),
             widget.WindowName(),
-            widget.Prompt(name="proj"),
+   #         widget.Systray(),
+#            widget.Prompt(name="proj"),
             ], 30),
         )
 ]

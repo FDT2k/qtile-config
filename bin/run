@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rofi -show run -modi run,window -show-icons -sidebar-mode
