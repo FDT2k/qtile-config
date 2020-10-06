@@ -94,7 +94,7 @@ class command:
     run = os.path.join(os.path.dirname(__file__), 'bin/run')
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
     barrier = os.path.join(os.path.dirname(__file__), 'bin/run.sh barrier.d Barrier')
-    sound = os.path.join(os.path.dirname(__file__), 'bin/run.sh sound.d "Sound Output"')
+    sound = os.path.join(os.path.dirname(__file__), 'bin/pulsaudio/sound-output.sh')
     screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
 
 class theme:
