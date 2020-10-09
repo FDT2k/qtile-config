@@ -85,8 +85,9 @@ class command:
     samsung_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-no-edp.sh')
     samsung_screen_dual_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-with-edp.sh')
     terminal = "terminator -b"
-    volume_up = "raisevolume"
-    volume_down = "lowervolume"
+    volume_up = os.path.join(os.path.dirname(__file__), 'bin/raisevolume')
+    volume_down =  os.path.join(os.path.dirname(__file__), 'bin/lowervolume')
+    volume_mute =  os.path.join(os.path.dirname(__file__), 'bin/mutevolume')
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
     browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
     app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
@@ -95,6 +96,7 @@ class command:
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
     barrier = os.path.join(os.path.dirname(__file__), 'bin/run.sh barrier.d Barrier')
     sound = os.path.join(os.path.dirname(__file__), 'bin/pulsaudio/sound-output.sh')
+    theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick')
     screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
 
 class theme:
@@ -171,23 +173,26 @@ keys = [
     Key([mod], "r", lazy.spawn(command.run)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
     Key([mod, alt], "b", lazy.spawn(command.barrier)),
+    Key([mod, alt], "t", lazy.spawn(command.theme)),
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
     Key([mod, alt], "s", lazy.spawn(command.sound)),
     Key([mod, alt], "l", lazy.spawn(command.screen_layout)),
     # launch graphic layout
-    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
-    Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
-    Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
-    Key([mod, alt], "v", lazy.function(set_samsung_monitor_dual_layout)),
+#    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
+#    Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
+#    Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
+#    Key([mod, alt], "v", lazy.function(set_samsung_monitor_dual_layout)),
+
+    Key([mod, alt], '9', lazy.spawn(command.volume_down)),
 
 
     # sounds & printscreen
     Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
     Key([], "XF86AudioLowerVolume", lazy.spawn(command.volume_down)),
     Key([], "XF86AudioRaiseVolume", lazy.spawn(command.volume_up)),
-    #Key([mod,alt], "-", lazy.spawn(command.volume_down)),
-    #Key([mod,alt], "-", lazy.spawn(command.volume_up)),
+    Key([], "XF86AudioMute", lazy.spawn(command.volume_mute)),
+   # Key([mod,alt], "+", lazy.spawn(command.volume_up)),
     Key([], 'Print', lazy.spawn(command.shoot)),
 
 ]

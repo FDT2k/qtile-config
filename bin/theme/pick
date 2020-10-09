@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+FOLDER="$HOME/Pictures/themes"
+OPTS=$(ls -l $FOLDER | awk 'NR>1 {print $NF}')
+
+STR="$2"
+
+
+
+choice=$(echo -e "$OPTS" | rofi -lines 5 -dmenu -p "Theme")
+
+
+wal -i $FOLDER/$choice
+
+. $DIR/reload

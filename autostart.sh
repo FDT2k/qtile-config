@@ -1,13 +1,16 @@
 #!/bin/bash
 
-telegram-desktop &
-thunderbird &
-bin/clickup &
+DIR=$(dirname $0)
+$DIR/bin/theme/reload &
+
+#telegram-desktop &
+#thunderbird &
+#bin/clickup &
 
 synology-drive &
 
+notify-send "autostart"
 
 sleep 1
 
-feh --bg-fill ~/background.jpg &
-bin/configure-dunst &
+#feh --bg-fill ~/background.jpg &
