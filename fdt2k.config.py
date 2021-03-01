@@ -195,6 +195,9 @@ keys = [
    # Key([mod,alt], "+", lazy.spawn(command.volume_up)),
     Key([], 'Print', lazy.spawn(command.shoot)),
 
+
+    
+
 ]
 
 #groups = [Group(i) for i in "asdfuiop"]
@@ -234,6 +237,13 @@ for i in groups:
     ])
 
 
+groups.append(ScratchPad("scratchpad",[
+        DropDown("term", "terminator -r \"dialog\" -p hold -l floating   -b")
+        ]))
+
+keys.extend([
+    Key([mod], 'F12', lazy.group['scratchpad'].dropdown_toggle('term')),
+])
 
 #dropdown
 # groups.append(

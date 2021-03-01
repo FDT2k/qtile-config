@@ -11,6 +11,8 @@ synology-drive &
 
 notify-send "autostart"
 
+tmux new -d -s ndb -c ~/Documents/work/fuge_workspaces "fuge shell microservice_dev/dev.yml"
+
 sleep 1
 
 #feh --bg-fill ~/background.jpg &
