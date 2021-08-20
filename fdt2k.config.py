@@ -43,6 +43,7 @@ alt = "mod1"
 ctrl = "control"
 shft =  "shift"
 
+
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):
     qtile.cmd_restart()
@@ -89,6 +90,7 @@ class command:
     volume_down =  os.path.join(os.path.dirname(__file__), 'bin/lowervolume')
     volume_mute =  os.path.join(os.path.dirname(__file__), 'bin/mutevolume')
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
+    record = os.path.join(os.path.dirname(__file__), 'bin/record.sh')
     browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
     app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
     configure = os.path.join(os.path.dirname(__file__), 'bin/run.sh configure.d Configure')
@@ -103,7 +105,7 @@ class theme:
     bg = "#283033"
     fg = "#FFFFFF"
     bg_active = "#ea3b0a"
-    margin = 5
+    margin = 10
 
 def set_vertical_monitor_layout(qtile):
     qtile.cmd_spawn(command.home_screen_layout)
@@ -117,6 +119,18 @@ def set_samsung_monitor_layout(qtile):
 
 def set_samsung_monitor_dual_layout(qtile):
     qtile.cmd_spawn(command.samsung_screen_dual_layout)
+
+
+curr_screen=0
+def toggle_screen_focus(qtile):
+    global curr_screen
+    if curr_screen == 0:
+        curr_screen = 1
+    else:
+        curr_screen = 0
+    qtile.cmd_to_screen(curr_screen)
+
+
 
 keys = [
     # Switch between windows in current stack pane
@@ -142,6 +156,10 @@ keys = [
     Key([mod, shft], "Return", lazy.layout.toggle_split()),
 
     Key([mod, shft], "n", lazy.layout.normalize()),
+
+#screen focus
+    Key([mod], "q",lazy.function(toggle_screen_focus) ),
+   
 
     # Computer control
     Key([mod, ctrl], "r", lazy.restart()),
@@ -194,9 +212,10 @@ keys = [
     Key([], "XF86AudioMute", lazy.spawn(command.volume_mute)),
    # Key([mod,alt], "+", lazy.spawn(command.volume_up)),
     Key([], 'Print', lazy.spawn(command.shoot)),
+    Key([shft], 'Print', lazy.spawn(command.record)),
 
 
-    
+
 
 ]
 
@@ -335,9 +354,9 @@ screens = [
                 ),
                 widget.Prompt(),
 
-               
+
                 widget.WindowName(padding=0),
-               
+
                # widget.TextBox("default config", name="default"),
 
                  widget.TextBox(
@@ -354,7 +373,7 @@ screens = [
 
                     line_width=1
                 ),
-               
+
                  widget.CPUGraph(
                     type="box",
                     graph_color=theme.bg_active,
@@ -381,7 +400,7 @@ screens = [
                 ),
                 widget.Systray(),
                 widget.Clock(format='%d.%m.%Y %H:%M'),
-                widget.BatteryIcon(),
+
          #       widget.Volume(get_volume_command="pamixer --get-volume",emoji=True),
                 widget.QuickExit(),
             ],
@@ -394,7 +413,7 @@ screens = [
             widget.CurrentLayout(),
             widget.GroupBox(disable_drag= True),
 #            widget.Prompt(),
-            widget.WindowName(),
+   #         widget.WindowName(),
    #         widget.Systray(),
 #            widget.Prompt(name="proj"),
             ], 30),
@@ -405,6 +424,7 @@ screens = [
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
          start=lazy.window.get_position()),
+     Click([mod,shft], "Button1", lazy.window.toggle_floating()),
     Drag([mod], "Button3", lazy.window.set_size_floating(),
          start=lazy.window.get_size()),
     Click([mod], "Button2", lazy.window.bring_to_front())
