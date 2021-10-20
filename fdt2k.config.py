@@ -24,10 +24,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import subprocess
+import sys
 from libqtile.config import Key, Screen, Group, Drag, Click, Match, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
-
+from libqtile.log_utils import logger
 from typing import List  # noqa: F401
 
 #from libqtile import xcbq
@@ -124,11 +126,44 @@ def set_samsung_monitor_dual_layout(qtile):
 curr_screen=0
 def toggle_screen_focus(qtile):
     global curr_screen
+    screen_name = "middle"
     if curr_screen == 0:
         curr_screen = 1
+        screen_name = "right"
+    elif curr_screen == 1:
+        curr_screen = 2
+        screen_name="left"
     else:
         curr_screen = 0
+
+
+    qtile.cmd_spawn("notify-send --hint=string:x-dunst-stack-tag:screenfocus  \"focused %s screen \"" % screen_name)
     qtile.cmd_to_screen(curr_screen)
+    move_cursor(curr_screen)
+
+
+def move_cursor( arg):
+    screeninfo = [
+      s for s in subprocess.check_output("xrandr").decode("utf-8").split()\
+      if s.count("+") == 2
+    ]
+   # logger.error("screens %s" , screeninfo)
+    #if arg == "left":
+    #    match = [s for s in screeninfo if s.endswith("+0+0")][0]
+    #elif arg == "right":
+    #    match = [s for s in screeninfo if not s.endswith("+0+0")][0]
+    match = screeninfo[arg]
+    data = [item.split("x") for item in match.split("+")]
+   # logger.error("data %s" , data)
+
+    numbers = [int(n) for n in [item for sublist in data for item in sublist]]
+   # logger.error("numbers %s" , numbers)
+
+    coord = [str(int(n)) for n in [(numbers[0]/2)+numbers[2], (numbers[1]/2)+numbers[3]]]
+   # logger.error("coords %s" , coord)
+
+    subprocess.Popen(["xdotool", "mousemove", coord[0], coord[1]])
+
 
 
 
@@ -152,6 +187,10 @@ keys = [
     Key([mod, alt], "Up", lazy.layout.grow_up()),
     Key([mod, alt], "Left", lazy.layout.grow_left()),
     Key([mod, alt], "Right", lazy.layout.grow_right()),
+
+
+    Key([mod, alt,shft], "Down", lazy.layout.shrink()),
+    Key([mod, alt,shft], "Up", lazy.layout.grow()),
 
     Key([mod, shft], "Return", lazy.layout.toggle_split()),
 
@@ -417,6 +456,16 @@ screens = [
    #         widget.Systray(),
 #            widget.Prompt(name="proj"),
             ], 30),
+        ),
+    Screen(
+        top=bar.Bar([
+            widget.CurrentLayout(),
+            widget.GroupBox(disable_drag= True),
+#            widget.Prompt(),
+   #         widget.WindowName(),
+   #         widget.Systray(),
+#            widget.Prompt(name="proj"),
+            ], 30),
         )
 ]
 
@@ -446,6 +495,7 @@ cursor_warp = False
     {'wmclass': 'splash'},
     {'role': 'dialog'},
     {'wmclass': 'toolbar'},
+    {'wmclass': 'xcalc'},
     {'wmclass': 'confirmreset'},  # gitk
     {'wmclass': 'makebranch'},  # gitk
     {'wmclass': 'maketag'},  # gitk
@@ -454,7 +504,26 @@ cursor_warp = False
     {'wmclass': 'ssh-askpass'},  # ssh-askpass
     {'wmclass': 'eww'}
 ], border_color=theme.bg_active) """
-floating_layout = layout.Floating(border_color=theme.bg_active)
+
+floating_layout = layout.Floating(float_rules=[
+        Match(wm_type='utility'),
+        Match(wm_type='notification'),
+        Match(wm_type='toolbar'),
+        Match(wm_type='splash'),
+        Match(wm_type='dialog'),
+        Match(wm_class='file_progress'),
+        Match(wm_class='confirm'),
+        Match(wm_class='dialog'),
+        Match(wm_class='download'),
+        Match(wm_class="xcalc"),
+        Match(wm_class='error'),
+        Match(wm_class='notification'),
+        Match(wm_class='splash'),
+        Match(wm_class='toolbar'),
+        Match(func=lambda c: c.has_fixed_size()),
+        Match(func=lambda c: c.has_fixed_ratio())
+],border_color=theme.bg_active)
+
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 

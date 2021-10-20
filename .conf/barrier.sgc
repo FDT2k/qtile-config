@@ -9,7 +9,7 @@ section: screens
 		switchCornerSize = 0
 		meta = altgr
 		altgr = shift
-	ALIEN:
+	DAOLOTH:
 		halfDuplexCapsLock = false
 		halfDuplexNumLock = false
 		halfDuplexScrollLock = false
@@ -24,8 +24,8 @@ end
 
 section: links
 	FDTACER:
-		right = ALIEN
-	ALIEN:
+		right = DAOLOTH
+	DAOLOTH:
 		left = FDTACER
 end
 
