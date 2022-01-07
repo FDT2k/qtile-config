@@ -24,7 +24,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import subprocess
+import subprocess, json
 import sys
 from libqtile.config import Key, Screen, Group, Drag, Click, Match, ScratchPad, DropDown
 from libqtile.lazy import lazy
@@ -76,6 +76,24 @@ def agroup(client):
     if group:
         client.togroup(group)
 
+home = os.path.expanduser('~')
+
+#pywall import 
+# from https://github.com/gibranlp/QARSlp/blob/6da11eb970a8b2560912eddef1615ebbbc19a048/dotfiles/.config/qtile/funct.py#L26
+##### Import Pywal Palette ##### 
+with open(home + '/.cache/wal/colors.json') as wal_import:
+    data = json.load(wal_import)
+    wallpaper = data['wallpaper']
+    alpha = data['alpha']
+    colors = data['colors']
+    val_colors = list(colors.values())
+    def getList(val_colors):
+        return [*val_colors]
+    
+def init_colors():
+    return [*val_colors]
+
+color = init_colors()
 
 class command:
     #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
@@ -99,6 +117,9 @@ class command:
     run = os.path.join(os.path.dirname(__file__), 'bin/run')
     pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
     barrier = os.path.join(os.path.dirname(__file__), 'bin/run.sh barrier.d Barrier')
+    middle_screen_brightness = os.path.join(os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
+    right_screen_brightness = os.path.join(os.path.dirname(__file__), 'bin/brightness.sh DVI-I-1')
+    left_screen_brightness = os.path.join(os.path.dirname(__file__), 'bin/brightness.sh DVI-I-1-0')
     sound = os.path.join(os.path.dirname(__file__), 'bin/pulsaudio/sound-output.sh')
     theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick')
     screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
@@ -140,6 +161,8 @@ def toggle_screen_focus(qtile):
     qtile.cmd_spawn("notify-send --hint=string:x-dunst-stack-tag:screenfocus  \"focused %s screen \"" % screen_name)
     qtile.cmd_to_screen(curr_screen)
     move_cursor(curr_screen)
+
+    
 
 
 def move_cursor( arg):
@@ -235,6 +258,13 @@ keys = [
     Key([mod, alt], "e", lazy.spawn(command.configure)),
     Key([mod, alt], "s", lazy.spawn(command.sound)),
     Key([mod, alt], "l", lazy.spawn(command.screen_layout)),
+
+    #screens options
+    Key([mod, alt], "2", lazy.spawn(command.middle_screen_brightness)),
+    Key([mod, alt], "3", lazy.spawn(command.right_screen_brightness)),
+    Key([mod, alt], "1", lazy.spawn(command.left_screen_brightness)),
+
+    
     # launch graphic layout
 #    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
 #    Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
@@ -359,6 +389,8 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 FONT_SIZE=12
+
+
 
 screens = [
     Screen(
