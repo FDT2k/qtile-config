@@ -319,71 +319,142 @@ keys = [
 
 ]
 
-#groups = [Group(i) for i in "asdfuiop"]
 
-groups = [
-    Group('a', label='a'),
-    Group('s', label='s'),
-    Group('d', label='d'),
-    Group('f', label='f'),
-    Group('u', label='u'),
-    Group('i', label='i'),
-    Group('o', label='o'),
-    Group('p', label='p'),
-    #    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
-    Group('y', label='y'),
-    Group('x', label='x'),
-    Group('c', label='c'),
-    Group('v', label='v'),
-    Group('b', label='b')
 
+
+# ----------------------------
+# --- Workspaces and Rooms ---
+# ----------------------------
+
+# The basic idea behind Workspaces and Rooms is to control
+# DIFFERENT subsets of groups with the SAME hotkeys.
+# So we can have multiple 'qwerasdf' rooms in a different workspaces.
+#
+# Qtile Groups are used behind the scenes, but their visibility
+# is set dynamically.
+
+def get_group_name(workspace, room):
+    """ Calculate Group name based on (workspace,room) combination.
+    """
+    return "%s%s" % (room, workspace)
+
+# List of available workspaces.
+# Each workspace has its own prefix and hotkey.
+workspaces = [
+    ('1', 'F1'),
+    ('2', 'F2'),
+    ('3', 'F3'),
+    ('4', 'F4'),
+    ('o', 'F5'),
+    ('p', 'F6'),
 ]
 
-# groups.extend([Group('comm')])
-for i in groups:
-    keys.extend([
-        # mod1 + letter of group = switch to group
-        Key([mod], i.name, lazy.group[i.name].toscreen()),
+# List of available rooms.
+# Rooms are identical between workspaces, but they can
+# be changed to different ones as well. Minor changes required.
+rooms = "asdf"
 
-        # mod1 + shift + letter of group = switch to & move focused window to group
-        #    Key([mod, shft], i.name, lazy.window.togroup(i.name, switch_group=True)),
-        # Or, use below if you prefer not to switch to that group.
-        # # mod1 + shift + letter of group = move focused window to group
-        #     Key([mod, shft, ctrl], i.name, lazy.window.togroup(i.name)),
+# Oops, time for a little hack there.
+# This is a global object with information about current workspace.
+# (viable as config code, not sure about client-server though)
+wsp = {
+    'current': workspaces[0][0], # first workspace is active by default
+}
+# ... and information about active group in the each workspace.
+for w, _ in workspaces:
+    wsp[w] = {
+        'active_group': get_group_name(w, rooms[0]) # first room is active by default
+    }
 
-        # move window to group
-        Key([mod, shft], i.name, lazy.window.togroup(i.name)),
-    ])
+def get_workspace_groups(workspace):
+    """ Get list of Groups that belongs to workspace.
+    """
+    return [ get_group_name(workspace, room) for room in rooms]
 
+def to_workspace(workspace):
+    """ Change current workspace to another one.
+    """
+    def f(qtile):
+        global wsp
 
-groups.append(ScratchPad("scratchpad", [
-    DropDown("term", "terminator -r \"dialog\" -p hold -l floating   -b")
-]))
+        # we need to save current active room(group) somewhere
+        # to return to it later
+        wsp[wsp['current']]['active_group'] = qtile.current_group.name
 
-keys.extend([
-    Key([mod], 'F12', lazy.group['scratchpad'].dropdown_toggle('term')),
-])
+        # now we can change current workspace to the new one
+        # (no actual switch there)
+        wsp['current'] = workspace
+        # and navigate to the active group from the workspace
+        # (actual switch)
+        #qtile.groups_map[
+        #    wsp[workspace]['active_group']
+        #].cmd_toscreen(toggle=False)
+       
 
-# dropdown
-# groups.append(
-#     ScratchPad("scratchpad", [
-#         # define a drop down terminal.
-#         # it is placed in the upper third of screen by default.
-#         DropDown("term", "terminator", opacity=0.88, height=0.55, width=0.80, ),
-#
-#         # define another terminal exclusively for qshell at different position
-#         DropDown("qshell", "terminator -e qshell",
-#                  x=0.05, y=0.4, width=0.9, height=0.6, opacity=0.9,
-#                  on_focus_lost_hide=True)
-#     ]), )
-#
-# keys.extend([
-#     # Scratchpad
-#     # toggle visibiliy of above defined DropDown named "term"
-#     Key([mod], 'F12', lazy.group['scratchpad'].dropdown_toggle('term')),
-#     Key([mod], 'F11', lazy.group['scratchpad'].dropdown_toggle('qshell')),
-# ])
+        for idx,screen in enumerate(qtile.screens):
+            
+            g = qtile.groups_map[
+                get_group_name(workspace,rooms[idx])
+            ]
+            screen.set_group(g)
 
+        #set_group(self, new_group, save_prev=True, warp=True):
+        # we also need to change subset of visible groups in the GroupBox widget
+        qtile.widgets_map['groupbox'].visible_groups=get_workspace_groups(workspace)
+
+        logger.error("screens %s" , qtile.widgets_map['groupbox'].visible_groups)
+        qtile.widgets_map['groupbox'].draw()
+        # You can do some other cosmetic stuff here.
+        # For example, change Bar background depending on the current workspace.
+        # # qtile.widgetMap['groupbox'].bar.background="ff0000"
+    return f
+
+def to_room(room):
+    """ Change active room to another within the current workspace.
+    """
+    def f(qtile):
+        global wsp
+        qtile.groups_map[get_group_name(wsp['current'], room)].cmd_toscreen(toggle=False)
+    return f
+
+def window_to_workspace(workspace, room=rooms[0]):
+    """ Move active window to another workspace.
+    """
+    def f(qtile):
+        global wsp
+        qtile.current_window.togroup(wsp[workspace]['active_group'])
+    return f
+
+def window_to_room(room):
+    """ Move active window to another room within the current workspace.
+    """
+    def f(qtile):
+        global wsp
+        qtile.current_window.togroup(get_group_name(wsp['current'], room))
+    return f
+
+# Create individual Group for each (workspace,room) combination we have
+groups = []
+for workspace, hotkey in workspaces:
+    for room in rooms:
+        groups.append(Group(get_group_name(workspace, room)))
+
+# Assign individual hotkeys for each workspace we have
+for workspace, hotkey in workspaces:
+    keys.append(Key([mod], hotkey, lazy.function(
+        to_workspace(workspace))))
+    keys.append(Key([mod, "shift"], hotkey, lazy.function(
+        window_to_workspace(workspace))))
+
+# Assign shared hotkeys for each room we have.
+# Decision about actual group to open is made dynamically.
+for room in rooms:
+    keys.append(Key([mod], room, lazy.function(
+        to_room(room))))
+    keys.append(Key([mod, "shift"], room, lazy.function(
+        window_to_room(room))))
+
+#end of workspaces
 
 layouts = [
     #    layout.Stack(num_stacks=2),
@@ -534,7 +605,8 @@ screens = [
                                 borderwidth=1,
                                 highlight_method='border',
                                 font='Open Sans',
-                                fontsize=12
+                                fontsize=12,
+                                visible_groups=get_workspace_groups(wsp['current']),
                                 ),
                 widget.TextBox(
                     font="Arial",
@@ -621,7 +693,8 @@ screens = [
                                 borderwidth=1,
                                 highlight_method='border',
                                 font='Open Sans',
-                                fontsize=12
+                                fontsize=12,
+                                visible_groups=get_workspace_groups(wsp['current']),
                                 ),
                 widget.TextBox(
                     font="Arial",
@@ -691,19 +764,7 @@ screens = [
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-                widget.GroupBox(disable_drag=True,
-                                background=theme_neg.bg,
-                                foreground=theme_neg.fg,
-                                active=theme_neg.fg,
-                                inactive=theme_neg.contrasted,
-                                this_current_screen_border=theme.bg,
-                                other_current_screen_border=theme.bg_other,
-                                other_screen_border=theme.bg_other,
-                                borderwidth=1,
-                                highlight_method='border',
-                                font='Open Sans',
-                                fontsize=12
-                                ),
+               
                 widget.TextBox(
                     font="Arial",
                     foreground=theme_neg.bg,
