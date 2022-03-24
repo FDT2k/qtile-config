@@ -24,36 +24,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import subprocess, json
+import subprocess
+import json
 import sys
+import os
+import subprocess
 from libqtile.config import Key, Screen, Group, Drag, Click, Match, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
 from libqtile.log_utils import logger
 from typing import List  # noqa: F401
 
-#from libqtile import xcbq
-#xcbq.keysyms["XF86AudioRaiseVolume"] = 0x1008ff13
-#xcbq.keysyms["XF86AudioLowerVolume"] = 0x1008ff11
-#xcbq.keysyms["XF86AudioMute"] = 0x1008ff12
+#from fdt2k_widgets import *
 
-
-import os
-import subprocess
 mod = "mod4"
 alt = "mod1"
 ctrl = "control"
-shft =  "shift"
+shft = "shift"
 
 
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):
     qtile.cmd_restart()
 
+
 @hook.subscribe.startup
 def autostart():
     home = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.call([home])
+
 
 @hook.subscribe.client_new
 def agroup(client):
@@ -61,39 +60,44 @@ def agroup(client):
     # class name of the app
     # you can use xprop to find it
     apps = {
-            'Telegram': 'p',
-            'VirtualBox Manager':'o',
-            'Mail':'p',
-            'discord':'p',
-            'spotify':'i',
-            'Spotify':'i',
-            'crx_edcmabgkbicempmpgmniellhbjopafjh':'s',
-            'calendar.google.com':'s'
-            }
+        'Telegram': 'p',
+        'VirtualBox Manager': 'o',
+        'Mail': 'p',
+        'discord': 'p',
+        'spotify': 'i',
+        'Spotify': 'i',
+        'crx_edcmabgkbicempmpgmniellhbjopafjh': 's',
+        'calendar.google.com': 's'
+    }
 
     wm_class = client.window.get_wm_class()[0]
     group = apps.get(wm_class, None)
     if group:
         client.togroup(group)
 
+
 home = os.path.expanduser('~')
 
-#pywall import 
+# pywall import
 # from https://github.com/gibranlp/QARSlp/blob/6da11eb970a8b2560912eddef1615ebbbc19a048/dotfiles/.config/qtile/funct.py#L26
-##### Import Pywal Palette ##### 
+##### Import Pywal Palette #####
 with open(home + '/.cache/wal/colors.json') as wal_import:
     data = json.load(wal_import)
     wallpaper = data['wallpaper']
     alpha = data['alpha']
     colors = data['colors']
     val_colors = list(colors.values())
+
     def getList(val_colors):
         return [*val_colors]
-    
+
+
 def init_colors():
     return [*val_colors]
 
+
 color = init_colors()
+
 
 class command:
     #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
@@ -101,33 +105,59 @@ class command:
     lock = os.path.join(os.path.dirname(__file__), 'bin/lock')
     suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
     hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
-    home_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/home-layout.sh')
-    work_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/vertical_layout.sh')
-    samsung_screen_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-no-edp.sh')
-    samsung_screen_dual_layout = os.path.join(os.path.dirname(__file__), 'bin/monitor_layout/samsung-uwide-with-edp.sh')
+    home_screen_layout = os.path.join(os.path.dirname(
+        __file__), 'bin/monitor_layout/home-layout.sh')
+    work_screen_layout = os.path.join(os.path.dirname(
+        __file__), 'bin/monitor_layout/vertical_layout.sh')
+    samsung_screen_layout = os.path.join(os.path.dirname(
+        __file__), 'bin/monitor_layout/samsung-uwide-no-edp.sh')
+    samsung_screen_dual_layout = os.path.join(os.path.dirname(
+        __file__), 'bin/monitor_layout/samsung-uwide-with-edp.sh')
     terminal = "terminator -b"
     volume_up = os.path.join(os.path.dirname(__file__), 'bin/raisevolume')
-    volume_down =  os.path.join(os.path.dirname(__file__), 'bin/lowervolume')
-    volume_mute =  os.path.join(os.path.dirname(__file__), 'bin/mutevolume')
+    volume_down = os.path.join(os.path.dirname(__file__), 'bin/lowervolume')
+    volume_mute = os.path.join(os.path.dirname(__file__), 'bin/mutevolume')
     shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
     record = os.path.join(os.path.dirname(__file__), 'bin/record.sh')
-    browser = os.path.join(os.path.dirname(__file__), 'bin/run.sh browser.d Browser')
+    browser = os.path.join(os.path.dirname(__file__),
+                           'bin/run.sh browser.d Browser')
     app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
-    configure = os.path.join(os.path.dirname(__file__), 'bin/run.sh configure.d Configure')
+    configure = os.path.join(os.path.dirname(
+        __file__), 'bin/run.sh configure.d Configure')
     run = os.path.join(os.path.dirname(__file__), 'bin/run')
-    pacman = os.path.join(os.path.dirname(__file__), 'bin/run.sh pacman.d Pacman')
-    barrier = os.path.join(os.path.dirname(__file__), 'bin/run.sh barrier.d Barrier')
-    middle_screen_brightness = os.path.join(os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
-    right_screen_brightness = os.path.join(os.path.dirname(__file__), 'bin/brightness.sh DVI-I-1')
-    left_screen_brightness = os.path.join(os.path.dirname(__file__), 'bin/brightness.sh DVI-I-1-0')
-    sound = os.path.join(os.path.dirname(__file__), 'bin/pulsaudio/sound-output.sh')
+    pacman = os.path.join(os.path.dirname(__file__),
+                          'bin/run.sh pacman.d Pacman')
+    barrier = os.path.join(os.path.dirname(__file__),
+                           'bin/run.sh barrier.d Barrier')
+    middle_screen_brightness = os.path.join(
+        os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
+    right_screen_brightness = os.path.join(
+        os.path.dirname(__file__), 'bin/brightness.sh DVI-I-1')
+    left_screen_brightness = os.path.join(
+        os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1-0')
+    sound = os.path.join(os.path.dirname(__file__),
+                         'bin/pulsaudio/sound-output.sh')
     theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick')
-    screen_layout = os.path.join(os.path.dirname(__file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
+    screen_layout = os.path.join(os.path.dirname(
+        __file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
+
 
 class theme:
-    bg = "#283033"
-    fg = "#FFFFFF"
-    bg_active = "#ea3b0a"
+    bg = color[0]
+    fg = color[7]
+    bg_active = color[1]
+    contrasted = color[6]
+    bg_other=  color[8]
+     
+    margin = 10
+
+class theme_neg:
+    bg = color[2]
+    fg = color[0]
+    bg_active = color[6]
+    contrasted = color[7]
+    bg_other=  color[6]
+    
     margin = 10
 
 def set_vertical_monitor_layout(qtile):
@@ -137,14 +167,18 @@ def set_vertical_monitor_layout(qtile):
 def set_horizontal_monitor_layout(qtile):
     qtile.cmd_spawn(command.work_screen_layout)
 
+
 def set_samsung_monitor_layout(qtile):
     qtile.cmd_spawn(command.samsung_screen_layout)
+
 
 def set_samsung_monitor_dual_layout(qtile):
     qtile.cmd_spawn(command.samsung_screen_dual_layout)
 
 
-curr_screen=0
+curr_screen = 0
+
+
 def toggle_screen_focus(qtile):
     global curr_screen
     screen_name = "middle"
@@ -153,27 +187,25 @@ def toggle_screen_focus(qtile):
         screen_name = "right"
     elif curr_screen == 1:
         curr_screen = 2
-        screen_name="left"
+        screen_name = "left"
     else:
         curr_screen = 0
 
-
-    qtile.cmd_spawn("notify-send --hint=string:x-dunst-stack-tag:screenfocus  \"focused %s screen \"" % screen_name)
+    qtile.cmd_spawn(
+        "notify-send --hint=string:x-dunst-stack-tag:screenfocus  \"focused %s screen \"" % screen_name)
     qtile.cmd_to_screen(curr_screen)
     move_cursor(curr_screen)
 
-    
 
-
-def move_cursor( arg):
+def move_cursor(arg):
     screeninfo = [
-      s for s in subprocess.check_output("xrandr").decode("utf-8").split()\
-      if s.count("+") == 2
+        s for s in subprocess.check_output("xrandr").decode("utf-8").split()
+        if s.count("+") == 2
     ]
    # logger.error("screens %s" , screeninfo)
-    #if arg == "left":
+    # if arg == "left":
     #    match = [s for s in screeninfo if s.endswith("+0+0")][0]
-    #elif arg == "right":
+    # elif arg == "right":
     #    match = [s for s in screeninfo if not s.endswith("+0+0")][0]
     match = screeninfo[arg]
     data = [item.split("x") for item in match.split("+")]
@@ -182,12 +214,11 @@ def move_cursor( arg):
     numbers = [int(n) for n in [item for sublist in data for item in sublist]]
    # logger.error("numbers %s" , numbers)
 
-    coord = [str(int(n)) for n in [(numbers[0]/2)+numbers[2], (numbers[1]/2)+numbers[3]]]
+    coord = [str(int(n))
+             for n in [(numbers[0]/2)+numbers[2], (numbers[1]/2)+numbers[3]]]
    # logger.error("coords %s" , coord)
 
     subprocess.Popen(["xdotool", "mousemove", coord[0], coord[1]])
-
-
 
 
 keys = [
@@ -212,16 +243,16 @@ keys = [
     Key([mod, alt], "Right", lazy.layout.grow_right()),
 
 
-    Key([mod, alt,shft], "Down", lazy.layout.shrink()),
-    Key([mod, alt,shft], "Up", lazy.layout.grow()),
+    Key([mod, alt, shft], "Down", lazy.layout.shrink()),
+    Key([mod, alt, shft], "Up", lazy.layout.grow()),
 
     Key([mod, shft], "Return", lazy.layout.toggle_split()),
 
     Key([mod, shft], "n", lazy.layout.normalize()),
 
-#screen focus
-    Key([mod], "q",lazy.function(toggle_screen_focus) ),
-   
+    # screen focus
+    Key([mod], "q", lazy.function(toggle_screen_focus)),
+
 
     # Computer control
     Key([mod, ctrl], "r", lazy.restart()),
@@ -245,7 +276,7 @@ keys = [
     #Key([mod], "r", lazy.spawncmd()),
 
 
-    #app shortcuts
+    # app shortcuts
 
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
     Key([mod, alt], "q", lazy.spawn(command.browser)),
@@ -259,17 +290,17 @@ keys = [
     Key([mod, alt], "s", lazy.spawn(command.sound)),
     Key([mod, alt], "l", lazy.spawn(command.screen_layout)),
 
-    #screens options
+    # screens options
     Key([mod, alt], "2", lazy.spawn(command.middle_screen_brightness)),
     Key([mod, alt], "3", lazy.spawn(command.right_screen_brightness)),
     Key([mod, alt], "1", lazy.spawn(command.left_screen_brightness)),
 
-    
+
     # launch graphic layout
-#    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
-#    Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
-#    Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
-#    Key([mod, alt], "v", lazy.function(set_samsung_monitor_dual_layout)),
+    #    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
+    #    Key([mod, alt], "x", lazy.function(set_horizontal_monitor_layout)),
+    #    Key([mod, alt], "c", lazy.function(set_samsung_monitor_layout)),
+    #    Key([mod, alt], "v", lazy.function(set_samsung_monitor_dual_layout)),
 
     Key([mod, alt], '9', lazy.spawn(command.volume_down)),
 
@@ -279,7 +310,7 @@ keys = [
     Key([], "XF86AudioLowerVolume", lazy.spawn(command.volume_down)),
     Key([], "XF86AudioRaiseVolume", lazy.spawn(command.volume_up)),
     Key([], "XF86AudioMute", lazy.spawn(command.volume_mute)),
-   # Key([mod,alt], "+", lazy.spawn(command.volume_up)),
+    # Key([mod,alt], "+", lazy.spawn(command.volume_up)),
     Key([], 'Print', lazy.spawn(command.shoot)),
     Key([shft], 'Print', lazy.spawn(command.record)),
 
@@ -299,41 +330,41 @@ groups = [
     Group('i', label='i'),
     Group('o', label='o'),
     Group('p', label='p'),
-#    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
-    Group('y', label= 'y'),
-    Group('x', label= 'x'),
-    Group('c', label= 'c'),
-    Group('v', label= 'v'),
-    Group('b', label= 'b')
+    #    Group(name='l' ,label='plop', matches=[Match(wm_class=["firefox"])]),
+    Group('y', label='y'),
+    Group('x', label='x'),
+    Group('c', label='c'),
+    Group('v', label='v'),
+    Group('b', label='b')
 
 ]
 
-#groups.extend([Group('comm')])
+# groups.extend([Group('comm')])
 for i in groups:
     keys.extend([
         # mod1 + letter of group = switch to group
         Key([mod], i.name, lazy.group[i.name].toscreen()),
 
         # mod1 + shift + letter of group = switch to & move focused window to group
-    #    Key([mod, shft], i.name, lazy.window.togroup(i.name, switch_group=True)),
+        #    Key([mod, shft], i.name, lazy.window.togroup(i.name, switch_group=True)),
         # Or, use below if you prefer not to switch to that group.
         # # mod1 + shift + letter of group = move focused window to group
-    #     Key([mod, shft, ctrl], i.name, lazy.window.togroup(i.name)),
+        #     Key([mod, shft, ctrl], i.name, lazy.window.togroup(i.name)),
 
         # move window to group
-         Key([mod, shft], i.name, lazy.window.togroup(i.name)),
+        Key([mod, shft], i.name, lazy.window.togroup(i.name)),
     ])
 
 
-groups.append(ScratchPad("scratchpad",[
-        DropDown("term", "terminator -r \"dialog\" -p hold -l floating   -b")
-        ]))
+groups.append(ScratchPad("scratchpad", [
+    DropDown("term", "terminator -r \"dialog\" -p hold -l floating   -b")
+]))
 
 keys.extend([
     Key([mod], 'F12', lazy.group['scratchpad'].dropdown_toggle('term')),
 ])
 
-#dropdown
+# dropdown
 # groups.append(
 #     ScratchPad("scratchpad", [
 #         # define a drop down terminal.
@@ -355,30 +386,30 @@ keys.extend([
 
 
 layouts = [
-#    layout.Stack(num_stacks=2),
+    #    layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
-     layout.Bsp(
-                border_width=2,
-                border_focus=theme.bg_active,
-                border_normal=theme.bg,
-                margin=theme.margin
-                ),
-     layout.Max(),
+    layout.Bsp(
+        border_width=2,
+        border_focus=theme.bg_active,
+        border_normal=theme.bg,
+        margin=theme.margin
+    ),
+    layout.Max(),
 
-#     layout.Columns(),
+    #     layout.Columns(),
     # layout.Matrix(),
-     layout.MonadTall(),
-     layout.MonadWide(),
-#     layout.RatioTile(),
+    layout.MonadTall(),
+    layout.MonadWide(),
+    #     layout.RatioTile(),
     # layout.Tile(),
-     layout.TreeTab(
+    layout.TreeTab(
         border_width=0,
         vspace=0,
         active_fg="000000",
         active_bg="ffffff"
-     ),
+    ),
     # layout.VerticalTile(),
-#     layout.Zoomy(columnwidth=500),
+    #     layout.Zoomy(columnwidth=500),
 ]
 
 widget_defaults = dict(
@@ -388,37 +419,126 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-FONT_SIZE=12
+FONT_SIZE = 12
 
+"""
+               
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[0],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[1],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[2],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[3],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[4],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[5],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[6],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=color[7],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                 widget.TextBox(
+                    font="Arial",
+                    foreground=color[8],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
 
+                 widget.TextBox(
+                    font="Arial",
+                    foreground=color[9],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                 widget.TextBox(
+                    font="Arial",
+                    foreground=color[10],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                 widget.TextBox(
+                    font="Arial",
+                    foreground=color[11],
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                """
 
 screens = [
     Screen(
         top=bar.Bar(
             [
                 widget.CurrentLayout(),
-
-                 widget.TextBox(
+               
+                widget.TextBox(
                     font="Arial",
-                    foreground="#CACACA",
+                    foreground=theme_neg.bg,
                     text="◢",
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-                widget.GroupBox(disable_drag= True,
-                                background="#CACACA",
-                                foreground=theme.fg,
-                                active='#000000',
-                                inactive= "#999999",
-                                this_current_screen_border=theme.bg_active,
+                widget.GroupBox(disable_drag=True,
+                                background=theme_neg.bg,
+                                foreground=theme_neg.fg,
+                                active=theme_neg.fg,
+                                inactive=theme_neg.contrasted,
+                                this_current_screen_border=theme.bg,
+                                other_current_screen_border=theme.bg_other,
+                                other_screen_border=theme.bg_other,
                                 borderwidth=1,
-                                highlight_method='block',
+                                highlight_method='border',
                                 font='Open Sans',
                                 fontsize=12
                                 ),
                 widget.TextBox(
                     font="Arial",
-                    foreground="#CACACA",
+                    foreground=theme_neg.bg,
                     text="◤ ",
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
@@ -428,9 +548,9 @@ screens = [
 
                 widget.WindowName(padding=0),
 
-               # widget.TextBox("default config", name="default"),
+                # widget.TextBox("default config", name="default"),
 
-                 widget.TextBox(
+                widget.TextBox(
                     font="Arial",
                     foreground="#CACACA",
                     text="◢",
@@ -445,7 +565,7 @@ screens = [
                     line_width=1
                 ),
 
-                 widget.CPUGraph(
+                widget.CPUGraph(
                     type="box",
                     graph_color=theme.bg_active,
                     border_color=theme.bg_active,
@@ -453,7 +573,7 @@ screens = [
                     border_width=2,
                     line_width=1
                 ),
-                 widget.MemoryGraph(
+                widget.MemoryGraph(
                     type="box",
                     graph_color=theme.bg_active,
                     border_color=theme.bg_active,
@@ -462,7 +582,7 @@ screens = [
                     border_width=2,
                     line_width=1
                 ),
-                 widget.TextBox(
+                widget.TextBox(
                     font="Arial",
                     foreground="#CACACA",
                     text="◤ ",
@@ -472,7 +592,7 @@ screens = [
                 widget.Systray(),
                 widget.Clock(format='%d.%m.%Y %H:%M'),
 
-         #       widget.Volume(get_volume_command="pamixer --get-volume",emoji=True),
+                #       widget.Volume(get_volume_command="pamixer --get-volume",emoji=True),
                 widget.QuickExit(),
             ],
             28,
@@ -481,31 +601,173 @@ screens = [
     ),
     Screen(
         top=bar.Bar([
-            widget.CurrentLayout(),
-            widget.GroupBox(disable_drag= True),
-#            widget.Prompt(),
-   #         widget.WindowName(),
-   #         widget.Systray(),
-#            widget.Prompt(name="proj"),
-            ], 30),
-        ),
+                widget.CurrentLayout(),
+               
+                widget.TextBox(
+                    font="Arial",
+                    foreground=theme_neg.bg,
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.GroupBox(disable_drag=True,
+                                background=theme_neg.bg,
+                                foreground=theme_neg.fg,
+                                active=theme_neg.fg,
+                                inactive=theme_neg.contrasted,
+                                this_current_screen_border=theme.bg,
+                                other_current_screen_border=theme.bg_other,
+                                other_screen_border=theme.bg_other,
+                                borderwidth=1,
+                                highlight_method='border',
+                                font='Open Sans',
+                                fontsize=12
+                                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=theme_neg.bg,
+                    text="◤ ",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.Prompt(),
+
+
+                widget.WindowName(padding=0),
+
+                # widget.TextBox("default config", name="default"),
+
+                widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.NetGraph(
+                    bandwidth_type="up",
+                    type="linefill",
+                    background="#CACACA",
+
+                    line_width=1
+                ),
+
+                widget.CPUGraph(
+                    type="box",
+                    graph_color=theme.bg_active,
+                    border_color=theme.bg_active,
+                    background="#CACACA",
+                    border_width=2,
+                    line_width=1
+                ),
+                widget.MemoryGraph(
+                    type="box",
+                    graph_color=theme.bg_active,
+                    border_color=theme.bg_active,
+                    background="#CACACA",
+
+                    border_width=2,
+                    line_width=1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◤ ",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+              
+               
+            ], 28,background=theme.bg),
+    ),
     Screen(
         top=bar.Bar([
-            widget.CurrentLayout(),
-            widget.GroupBox(disable_drag= True),
-#            widget.Prompt(),
-   #         widget.WindowName(),
-   #         widget.Systray(),
-#            widget.Prompt(name="proj"),
-            ], 30),
-        )
+                widget.CurrentLayout(),
+               
+                widget.TextBox(
+                    font="Arial",
+                    foreground=theme_neg.bg,
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.GroupBox(disable_drag=True,
+                                background=theme_neg.bg,
+                                foreground=theme_neg.fg,
+                                active=theme_neg.fg,
+                                inactive=theme_neg.contrasted,
+                                this_current_screen_border=theme.bg,
+                                other_current_screen_border=theme.bg_other,
+                                other_screen_border=theme.bg_other,
+                                borderwidth=1,
+                                highlight_method='border',
+                                font='Open Sans',
+                                fontsize=12
+                                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground=theme_neg.bg,
+                    text="◤ ",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.Prompt(),
+
+
+                widget.WindowName(padding=0),
+
+                # widget.TextBox("default config", name="default"),
+
+                widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◢",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+                widget.NetGraph(
+                    bandwidth_type="up",
+                    type="linefill",
+                    background="#CACACA",
+
+                    line_width=1
+                ),
+
+                widget.CPUGraph(
+                    type="box",
+                    graph_color=theme.bg_active,
+                    border_color=theme.bg_active,
+                    background="#CACACA",
+                    border_width=2,
+                    line_width=1
+                ),
+                widget.MemoryGraph(
+                    type="box",
+                    graph_color=theme.bg_active,
+                    border_color=theme.bg_active,
+                    background="#CACACA",
+
+                    border_width=2,
+                    line_width=1
+                ),
+                widget.TextBox(
+                    font="Arial",
+                    foreground="#CACACA",
+                    text="◤ ",
+                    fontsize=(FONT_SIZE*5.25),
+                    padding=-1
+                ),
+              
+               
+            ], 28,background=theme.bg),
+    )
 ]
 
 # Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
          start=lazy.window.get_position()),
-     Click([mod,shft], "Button1", lazy.window.toggle_floating()),
+    Click([mod, shft], "Button1", lazy.window.toggle_floating()),
     Drag([mod], "Button3", lazy.window.set_size_floating(),
          start=lazy.window.get_size()),
     Click([mod], "Button2", lazy.window.bring_to_front())
@@ -538,23 +800,24 @@ cursor_warp = False
 ], border_color=theme.bg_active) """
 
 floating_layout = layout.Floating(float_rules=[
-        Match(wm_type='utility'),
-        Match(wm_type='notification'),
-        Match(wm_type='toolbar'),
-        Match(wm_type='splash'),
-        Match(wm_type='dialog'),
-        Match(wm_class='file_progress'),
-        Match(wm_class='confirm'),
-        Match(wm_class='dialog'),
-        Match(wm_class='download'),
-        Match(wm_class="xcalc"),
-        Match(wm_class='error'),
-        Match(wm_class='notification'),
-        Match(wm_class='splash'),
-        Match(wm_class='toolbar'),
-        Match(func=lambda c: c.has_fixed_size()),
-        Match(func=lambda c: c.has_fixed_ratio())
-],border_color=theme.bg_active)
+    Match(wm_type='utility'),
+    Match(wm_type='notification'),
+    Match(wm_type='toolbar'),
+    Match(wm_type='splash'),
+    Match(wm_type='dialog'),
+    Match(wm_class='file_progress'),
+    Match(wm_class='confirm'),
+    Match(wm_class='dialog'),
+    Match(wm_class='download'),
+    Match(wm_class="xcalc"),
+    Match(wm_class='error'),
+    Match(wm_class='notification'),
+    Match(wm_class='splash'),
+    Match(wm_class='toolbar'),
+    Match(wm_class='bitwarden'),
+    Match(func=lambda c: c.has_fixed_size()),
+    Match(func=lambda c: c.has_fixed_ratio())
+], border_color=theme.bg_active)
 
 auto_fullscreen = True
 focus_on_window_activation = "smart"

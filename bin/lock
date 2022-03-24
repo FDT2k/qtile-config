@@ -10,4 +10,4 @@
 
 # Import the colors
 . "${HOME}/.cache/wal/colors.sh"
-i3lock -c "$color1"
+i3lock -c "$color1" -i "${HOME}/.cache/wal/wallpaper.png"
