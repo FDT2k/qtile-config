@@ -43,6 +43,29 @@ ctrl = "control"
 shft = "shift"
 
 
+# List of available workspaces.
+# Each workspace has its own prefix and hotkey.
+workspaces = [
+    ('1', 'F1'),
+    ('2', 'F2'),
+    ('3', 'F3'),
+    ('4', 'F4'),
+    ('o', 'F5'),
+    ('p', 'F6'),
+]
+
+# List of available rooms.
+# Rooms are identical between workspaces, but they can
+# be changed to different ones as well. Minor changes required.
+rooms = "asdf"
+
+# Oops, time for a little hack there.
+# This is a global object with information about current workspace.
+# (viable as config code, not sure about client-server though)
+wsp = {
+    'current': workspaces[0][0], # first workspace is active by default
+}
+
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):
     qtile.cmd_restart()
@@ -137,7 +160,7 @@ class command:
         os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1-0')
     sound = os.path.join(os.path.dirname(__file__),
                          'bin/pulsaudio/sound-output.sh')
-    theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick')
+    theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick ' )
     screen_layout = os.path.join(os.path.dirname(
         __file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
 
@@ -178,6 +201,8 @@ def set_samsung_monitor_dual_layout(qtile):
 
 curr_screen = 0
 
+def pick_theme(qtile):
+     qtile.cmd_spawn(command.theme+' '+wsp['current'])
 
 def toggle_screen_focus(qtile):
     global curr_screen
@@ -284,7 +309,8 @@ keys = [
     Key([mod], "r", lazy.spawn(command.run)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
     Key([mod, alt], "b", lazy.spawn(command.barrier)),
-    Key([mod, alt], "t", lazy.spawn(command.theme)),
+   # Key([mod, alt], "t", lazy.spawn(command.theme+' '+wsp['current'])),
+    Key([mod, alt], "t", lazy.function(pick_theme)),
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
     Key([mod, alt], "s", lazy.spawn(command.sound)),
@@ -338,28 +364,6 @@ def get_group_name(workspace, room):
     """
     return "%s%s" % (room, workspace)
 
-# List of available workspaces.
-# Each workspace has its own prefix and hotkey.
-workspaces = [
-    ('1', 'F1'),
-    ('2', 'F2'),
-    ('3', 'F3'),
-    ('4', 'F4'),
-    ('o', 'F5'),
-    ('p', 'F6'),
-]
-
-# List of available rooms.
-# Rooms are identical between workspaces, but they can
-# be changed to different ones as well. Minor changes required.
-rooms = "asdf"
-
-# Oops, time for a little hack there.
-# This is a global object with information about current workspace.
-# (viable as config code, not sure about client-server though)
-wsp = {
-    'current': workspaces[0][0], # first workspace is active by default
-}
 # ... and information about active group in the each workspace.
 for w, _ in workspaces:
     wsp[w] = {
@@ -400,18 +404,19 @@ def to_workspace(workspace):
                 logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
                 if type(__widget) is widget.groupbox.GroupBox :
                     __widget.visible_groups=get_workspace_groups(workspace)
+                    __widget.draw()
 
 
 
         #set_group(self, new_group, save_prev=True, warp=True):
         # we also need to change subset of visible groups in the GroupBox widget
-        qtile.widgets_map['groupbox'].visible_groups=get_workspace_groups(workspace)
+        #qtile.widgets_map['groupbox'].visible_groups=get_workspace_groups(workspace)
 
         #logger.error("screens %s" , qtile.widgets_map)
-        qtile.widgets_map['groupbox'].draw()
+       # qtile.widgets_map['groupbox'].draw()
         # You can do some other cosmetic stuff here.
         # For example, change Bar background depending on the current workspace.
-        # # qtile.widgetMap['groupbox'].bar.background="ff0000"
+        #qtile.widgets_map['groupbox'].bar.background="ff0000"
 
         
     return f
