@@ -392,21 +392,28 @@ def to_workspace(workspace):
        
 
         for idx,screen in enumerate(qtile.screens):
-            
             g = qtile.groups_map[
                 get_group_name(workspace,rooms[idx])
             ]
             screen.set_group(g)
+            for i,__widget in enumerate( screen.top.widgets):
+                logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
+                if type(__widget) is widget.groupbox.GroupBox :
+                    __widget.visible_groups=get_workspace_groups(workspace)
+
+
 
         #set_group(self, new_group, save_prev=True, warp=True):
         # we also need to change subset of visible groups in the GroupBox widget
         qtile.widgets_map['groupbox'].visible_groups=get_workspace_groups(workspace)
 
-        logger.error("screens %s" , qtile.widgets_map['groupbox'].visible_groups)
+        #logger.error("screens %s" , qtile.widgets_map)
         qtile.widgets_map['groupbox'].draw()
         # You can do some other cosmetic stuff here.
         # For example, change Bar background depending on the current workspace.
         # # qtile.widgetMap['groupbox'].bar.background="ff0000"
+
+        
     return f
 
 def to_room(room):
@@ -764,7 +771,20 @@ screens = [
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-               
+               widget.GroupBox(disable_drag=True,
+                                background=theme_neg.bg,
+                                foreground=theme_neg.fg,
+                                active=theme_neg.fg,
+                                inactive=theme_neg.contrasted,
+                                this_current_screen_border=theme.bg,
+                                other_current_screen_border=theme.bg_other,
+                                other_screen_border=theme.bg_other,
+                                borderwidth=1,
+                                highlight_method='border',
+                                font='Open Sans',
+                                fontsize=12,
+                                visible_groups=get_workspace_groups(wsp['current']),
+                                ),
                 widget.TextBox(
                     font="Arial",
                     foreground=theme_neg.bg,
