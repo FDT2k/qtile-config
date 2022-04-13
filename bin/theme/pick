@@ -16,12 +16,12 @@ convert $FOLDER/$choice   -scale 10% -scale 1000%  ~/.cache/wal/wallpaper.png
 #store choice for workspace 
 
 
-cp -a $FOLDER/$choice ~/.cache/wal/.current-theme.jpg
+cp -a $FOLDER/$choice ~/.cache/wal/current-theme.jpg
 
 rm  ~/.cache/wal/.theme-$STR.jpg
 ln -s  $FOLDER/$choice ~/.cache/wal/.theme-$STR.jpg
 
-wal -i ~/.cache/wal/.current-theme.jpg
+wal -i $FOLDER/$choice
 
 qtile cmd-obj -o cmd -f restart
 

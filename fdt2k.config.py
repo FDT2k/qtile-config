@@ -152,6 +152,8 @@ class command:
                           'bin/run.sh pacman.d Pacman')
     barrier = os.path.join(os.path.dirname(__file__),
                            'bin/run.sh barrier.d Barrier')
+    power = os.path.join(os.path.dirname(__file__),
+                           'bin/run.sh power.d Power')
     middle_screen_brightness = os.path.join(
         os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
     right_screen_brightness = os.path.join(
@@ -308,6 +310,7 @@ keys = [
     Key([mod, alt], "a", lazy.spawn(command.app_menu)),
     Key([mod], "r", lazy.spawn(command.run)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
+    Key([mod, ctrl], "p", lazy.spawn(command.power)),
     Key([mod, alt], "b", lazy.spawn(command.barrier)),
    # Key([mod, alt], "t", lazy.spawn(command.theme+' '+wsp['current'])),
     Key([mod, alt], "t", lazy.function(pick_theme)),
