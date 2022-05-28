@@ -1,4 +1,4 @@
 #!/bin/bash
 screen=$1
-value=$(echo "" | rofi -dmenu -p "Enter brightness  (float) > "  -theme-str 'listview { enabled: false;}' ); 
-xrandr --output $screen --brightness $value
+value=$(echo "" | rofi -dmenu -p "Enter brightness  (1-10) > "  -theme-str 'listview { enabled: false;}' ); 
+xrandr --output $screen --brightness $(($value/10))
