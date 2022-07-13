@@ -83,7 +83,7 @@ def agroup(client):
     # class name of the app
     # you can use xprop to find it
     apps = {
-        'Telegram': 'p',
+        'telegram-desktop': 'f',
         'VirtualBox Manager': 'o',
         'Mail': 'p',
         'discord': 'p',
@@ -92,11 +92,14 @@ def agroup(client):
         'crx_edcmabgkbicempmpgmniellhbjopafjh': 's',
         'calendar.google.com': 's'
     }
-
     wm_class = client.window.get_wm_class()[0]
     group = apps.get(wm_class, None)
+    logger.error("class %s %s" , wm_class,group)
     if group:
-        client.togroup(group)
+        client.togroup(get_group_name(wsp['current'], group))
+        #to_room(group)
+#        client.togroup(group)
+
 
 
 home = os.path.expanduser('~')
@@ -397,7 +400,7 @@ def to_workspace(workspace):
         #    wsp[workspace]['active_group']
         #].cmd_toscreen(toggle=False)
        
-
+        #dispatch the workspace's groups in order on each screen
         for idx,screen in enumerate(qtile.screens):
             g = qtile.groups_map[
                 get_group_name(workspace,rooms[idx])
@@ -484,9 +487,9 @@ layouts = [
 
     #     layout.Columns(),
     # layout.Matrix(),
-    layout.MonadTall(),
-    layout.MonadWide(),
-    #     layout.RatioTile(),
+    #layout.MonadTall(),
+    #layout.MonadWide(),
+    # layout.RatioTile(),
     # layout.Tile(),
     layout.TreeTab(
         border_width=0,
@@ -495,7 +498,7 @@ layouts = [
         active_bg="ffffff"
     ),
     # layout.VerticalTile(),
-    #     layout.Zoomy(columnwidth=500),
+    #layout.Zoomy(columnwidth=500),
 ]
 
 widget_defaults = dict(
@@ -904,6 +907,7 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='splash'),
     Match(wm_class='toolbar'),
     Match(wm_class='bitwarden'),
+    Match(wm_class='blueman-manager'),
     Match(func=lambda c: c.has_fixed_size()),
     Match(func=lambda c: c.has_fixed_ratio())
 ], border_color=theme.bg_active)
