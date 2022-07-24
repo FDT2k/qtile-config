@@ -18,6 +18,10 @@ killall -9 aw-server
 killall -9 aw-watcher-afk
 killall -9 aw-watcher-window
 
+killall -9 compton
+
+
+
 aw-qt &
 xiccd & 
 
@@ -33,6 +37,7 @@ xiccd &
 colormgr device-set-enabled "xrandr-Ancor Communications Inc-ASUS VS238-BCLMTF008344" True
 colormgr device-set-enabled "xrandr-Philips Consumer Electronics Company-PHL 243V5-ZV0154600052" True
 colormgr device-set-enabled "xrandr-Samsung Electric Company-S34J55x-H4ZMC01890" True
+compton &
 
 
 #feh --bg-fill ~/background.jpg &

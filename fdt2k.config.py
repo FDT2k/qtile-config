@@ -90,7 +90,9 @@ def agroup(client):
         'spotify': 'i',
         'Spotify': 'i',
         'crx_edcmabgkbicempmpgmniellhbjopafjh': 's',
-        'calendar.google.com': 's'
+        'calendar.google.com': 's',
+        'qemu':'f',
+        'bia-manager-electron':'d'
     }
     wm_class = client.window.get_wm_class()[0]
     group = apps.get(wm_class, None)
@@ -463,6 +465,37 @@ for workspace, hotkey in workspaces:
         to_workspace(workspace))))
     keys.append(Key([mod, "shift"], hotkey, lazy.function(
         window_to_workspace(workspace))))
+
+
+groups.append(ScratchPad(name='scratchpad', dropdowns=[
+    DropDown('terminal', 'terminator', width=0.8,
+             height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
+    DropDown('spotify', 'spotify', width=0.8,
+             height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='spotify'), on_focus_lost_hide=False),
+   DropDown('telegram', 'telegram-desktop', width=0.8,
+             height=0.8, x=0.1, y=0.1, opacity=1, match =Match(wm_class='telegram-desktop'), on_focus_lost_hide=False),
+    DropDown('mixer', 'pavucontrol', width=0.4,
+             height=0.6, x=0.3, y=0.1, opacity=1),
+    DropDown('bitwarden', 'bitwarden-desktop',
+             width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,match =Match(wm_class='bitwarden-desktop'), on_focus_lost_hide=False),
+    DropDown('clickup', 'clickup',
+             width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='clickup'), on_focus_lost_hide=False),
+    DropDown('thunderbird', 'thunderbird',
+             width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,on_focus_lost_hide=False),
+    DropDown('blueman', 'blueman-manager',
+             width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,on_focus_lost_hide=False),
+],single=True))
+
+keys.extend([
+    Key([mod,ctrl], "1", lazy.group['scratchpad'].dropdown_toggle('terminal')),
+    Key([mod,ctrl], "7", lazy.group['scratchpad'].dropdown_toggle('mixer')),
+    Key([mod,ctrl], "2", lazy.group['scratchpad'].dropdown_toggle('telegram')),
+    Key([mod,ctrl], "3", lazy.group['scratchpad'].dropdown_toggle('bitwarden')),
+    Key([mod,ctrl], "4", lazy.group['scratchpad'].dropdown_toggle('clickup')),
+    Key([mod,ctrl], "5", lazy.group['scratchpad'].dropdown_toggle('blueman')),
+    Key([mod,ctrl], "6", lazy.group['scratchpad'].dropdown_toggle('thunderbird')),
+    Key([mod,ctrl], "7", lazy.group['scratchpad'].dropdown_toggle('spotify')),
+])
 
 # Assign shared hotkeys for each room we have.
 # Decision about actual group to open is made dynamically.
