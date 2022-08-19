@@ -157,8 +157,8 @@ class command:
                           'bin/run.sh pacman.d Pacman')
     barrier = os.path.join(os.path.dirname(__file__),
                            'bin/run.sh barrier.d Barrier')
-    power = os.path.join(os.path.dirname(__file__),
-                           'bin/run.sh power.d Power')
+    power = os.path.join(os.path.dirname(__file__),'bin/run.sh power.d Power')
+    #power = os.path.join(os.path.dirname(__file__),'rofi/powermenu.sh')
     middle_screen_brightness = os.path.join(
         os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
     right_screen_brightness = os.path.join(
