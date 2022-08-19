@@ -83,7 +83,7 @@ def agroup(client):
     # class name of the app
     # you can use xprop to find it
     apps = {
-        'telegram-desktop': 'f',
+       
         'VirtualBox Manager': 'o',
         'Mail': 'p',
         'discord': 'p',
@@ -288,7 +288,7 @@ keys = [
 
     # Computer control
     Key([mod, ctrl], "r", lazy.restart()),
-    Key([mod, ctrl], "q", lazy.shutdown()),
+    #Key([mod, ctrl], "q", lazy.shutdown()),
     Key([mod], "l", lazy.spawn(command.lock)),
     Key([mod], "Return", lazy.spawn(command.terminal)),
 
@@ -297,7 +297,7 @@ keys = [
     Key([mod], "space", lazy.next_layout()),
     Key([mod], "Tab", lazy.screen.next_group()),
     Key([mod, shft], "Tab", lazy.screen.prev_group()),
-    Key([mod, ctrl], "l", lazy.spawn(command.suspend)),
+   # Key([mod, ctrl], "l", lazy.spawn(command.suspend)),
 
 
 
@@ -468,8 +468,8 @@ for workspace, hotkey in workspaces:
 
 
 groups.append(ScratchPad(name='scratchpad', dropdowns=[
-    DropDown('terminal', 'terminator', width=0.8,
-             height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
+    DropDown('terminal', 'terminator', width=0.9,
+             height=0.9, x=0.05, y=0.05, opacity=0.95, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
     DropDown('spotify', 'spotify', width=0.8,
              height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='spotify'), on_focus_lost_hide=False),
    DropDown('telegram', 'telegram-desktop', width=0.8,
