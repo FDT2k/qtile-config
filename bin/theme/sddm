@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+DIR=$(dirname $0)
+
+SDDM_THEME="/usr/share/sddm/themes/sugar-dark/theme.conf.user"
+IMAGE="/home/fabien/.cache/wal/current-theme.jpg"
+
+
+echo "[General]" > $SDDM_THEME
+echo "background=$IMAGE" >$SDDM_THEME

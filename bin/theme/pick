@@ -26,3 +26,4 @@ wal -i $FOLDER/$choice
 qtile cmd-obj -o cmd -f restart
 
 . $DIR/reload
+. $DIR/sddm

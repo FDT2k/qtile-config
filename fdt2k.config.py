@@ -91,7 +91,6 @@ def agroup(client):
         'Spotify': 'i',
         'crx_edcmabgkbicempmpgmniellhbjopafjh': 's',
         'calendar.google.com': 's',
-        'qemu':'f',
         'bia-manager-electron':'d'
     }
     wm_class = client.window.get_wm_class()[0]
@@ -158,6 +157,7 @@ class command:
     barrier = os.path.join(os.path.dirname(__file__),
                            'bin/run.sh barrier.d Barrier')
     power = os.path.join(os.path.dirname(__file__),'bin/run.sh power.d Power')
+    virt = os.path.join(os.path.dirname(__file__),'bin/run.sh osx.d Virt')
     #power = os.path.join(os.path.dirname(__file__),'rofi/powermenu.sh')
     middle_screen_brightness = os.path.join(
         os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
@@ -319,6 +319,7 @@ keys = [
     Key([mod, alt], "b", lazy.spawn(command.barrier)),
    # Key([mod, alt], "t", lazy.spawn(command.theme+' '+wsp['current'])),
     Key([mod, alt], "t", lazy.function(pick_theme)),
+    Key([mod, alt], "v", lazy.spawn(command.virt)),
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
     Key([mod, alt], "s", lazy.spawn(command.sound)),
