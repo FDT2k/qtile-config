@@ -478,7 +478,7 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
     DropDown('mixer', 'pavucontrol', width=0.4,
              height=0.6, x=0.3, y=0.1, opacity=1),
     DropDown('bitwarden', 'bitwarden-desktop',
-             width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,match =Match(wm_class='bitwarden-desktop'), on_focus_lost_hide=False),
+             width=0.6, height=0.6, x=0.2, y=0.1, opacity=1 ,match =Match(wm_class='bitwarden-desktop'), on_focus_lost_hide=False),
     DropDown('clickup', 'clickup',
              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='clickup'), on_focus_lost_hide=False),
     DropDown('thunderbird', 'thunderbird',
