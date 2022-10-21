@@ -485,6 +485,8 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,on_focus_lost_hide=False),
     DropDown('blueman', 'blueman-manager',
              width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,on_focus_lost_hide=False),
+    DropDown('gitahead', 'gitahead',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gitahead'), on_focus_lost_hide=False),
 ],single=True))
 
 keys.extend([
@@ -496,6 +498,7 @@ keys.extend([
     Key([mod,ctrl], "5", lazy.group['scratchpad'].dropdown_toggle('blueman')),
     Key([mod,ctrl], "6", lazy.group['scratchpad'].dropdown_toggle('thunderbird')),
     Key([mod,ctrl], "7", lazy.group['scratchpad'].dropdown_toggle('spotify')),
+    Key([mod,ctrl], "8", lazy.group['scratchpad'].dropdown_toggle('gitahead')),
 ])
 
 # Assign shared hotkeys for each room we have.
