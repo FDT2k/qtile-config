@@ -57,7 +57,7 @@ workspaces = [
 # List of available rooms.
 # Rooms are identical between workspaces, but they can
 # be changed to different ones as well. Minor changes required.
-rooms = "asdf"
+rooms = "asdfq"
 
 # Oops, time for a little hack there.
 # This is a global object with information about current workspace.
@@ -487,18 +487,21 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
              width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,on_focus_lost_hide=False),
     DropDown('gitahead', 'gitahead',
               width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gitahead'), on_focus_lost_hide=False),
+    DropDown('doc', 'google-chrome-stable',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='google-chrome'), on_focus_lost_hide=False),              
 ],single=True))
 
 keys.extend([
     Key([mod,ctrl], "1", lazy.group['scratchpad'].dropdown_toggle('terminal')),
-    Key([mod,ctrl], "7", lazy.group['scratchpad'].dropdown_toggle('mixer')),
     Key([mod,ctrl], "2", lazy.group['scratchpad'].dropdown_toggle('telegram')),
     Key([mod,ctrl], "3", lazy.group['scratchpad'].dropdown_toggle('bitwarden')),
     Key([mod,ctrl], "4", lazy.group['scratchpad'].dropdown_toggle('clickup')),
     Key([mod,ctrl], "5", lazy.group['scratchpad'].dropdown_toggle('blueman')),
     Key([mod,ctrl], "6", lazy.group['scratchpad'].dropdown_toggle('thunderbird')),
-    Key([mod,ctrl], "7", lazy.group['scratchpad'].dropdown_toggle('spotify')),
     Key([mod,ctrl], "8", lazy.group['scratchpad'].dropdown_toggle('gitahead')),
+    Key([mod,ctrl], "9", lazy.group['scratchpad'].dropdown_toggle('mixer')),
+    Key([mod,ctrl], "0", lazy.group['scratchpad'].dropdown_toggle('doc')),
+
 ])
 
 # Assign shared hotkeys for each room we have.
@@ -515,12 +518,17 @@ layouts = [
     #    layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
     layout.Bsp(
-        border_width=2,
+        border_width=4,
         border_focus=theme.bg_active,
         border_normal=theme.bg,
         margin=theme.margin
     ),
-    layout.Max(),
+    layout.Max(
+          border_width=2,
+        border_focus=theme.bg_active,
+        border_normal=theme.bg,
+        margin=theme.margin
+    ),
 
     #     layout.Columns(),
     # layout.Matrix(),
@@ -529,10 +537,26 @@ layouts = [
     # layout.RatioTile(),
     # layout.Tile(),
     layout.TreeTab(
-        border_width=0,
-        vspace=0,
-        active_fg="000000",
-        active_bg="ffffff"
+      
+       # active_fg=theme.bg_active,
+        active_bg=theme.bg_active,
+        bg_color=theme.bg,
+        panel_width=200,
+          border_width=2,
+        border_focus=theme.bg_active,
+        border_normal=theme.bg,
+        margin=theme.margin,
+        section_top=theme.margin,
+        section_bottom=theme.margin,
+        margin_left=theme.margin,
+        margin_y = theme.margin,
+        padding_y = theme.margin
+    ),
+     layout.Columns(
+      
+      
+        margin=theme.margin,
+      
     ),
     # layout.VerticalTile(),
     #layout.Zoomy(columnwidth=500),
@@ -639,7 +663,14 @@ FONT_SIZE = 12
 screens = [
     Screen(
         top=bar.Bar(
+           
             [
+                widget.Spacer(10),
+                widget.CurrentLayoutIcon(
+                    padding = 0,
+                    scale = 0.5,
+                ),
+
                 widget.CurrentLayout(),
                
                 widget.TextBox(
@@ -716,18 +747,23 @@ screens = [
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-                widget.Systray(),
+               # widget.Systray(),
                 widget.Clock(format='%d.%m.%Y %H:%M'),
 
                 #       widget.Volume(get_volume_command="pamixer --get-volume",emoji=True),
                 widget.QuickExit(),
+                widget.Spacer(10),
             ],
             28,
-            background=theme.bg
+            background=theme.bg,
+            margin= [10,10,0,10],
+            
+
         ),
     ),
     Screen(
         top=bar.Bar([
+            widget.Spacer(10),
                 widget.CurrentLayout(),
                
                 widget.TextBox(
@@ -804,12 +840,13 @@ screens = [
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-              
+              widget.Spacer(10),
                
-            ], 28,background=theme.bg),
+            ], 28,background=theme.bg, margin= [10,10,0,10]),
     ),
     Screen(
         top=bar.Bar([
+            widget.Spacer(10),
                 widget.CurrentLayout(),
                
                 widget.TextBox(
@@ -886,9 +923,10 @@ screens = [
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-              
+                 widget.Systray(),
+              widget.Spacer(10),
                
-            ], 28,background=theme.bg),
+            ], 28,background=theme.bg, margin= [10,10,0,10]),
     )
 ]
 
@@ -947,7 +985,7 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='blueman-manager'),
     Match(func=lambda c: c.has_fixed_size()),
     Match(func=lambda c: c.has_fixed_ratio())
-], border_color=theme.bg_active)
+], border_normal=theme.fg, border_focus=theme.bg,border_width=4)
 
 auto_fullscreen = True
 focus_on_window_activation = "smart"

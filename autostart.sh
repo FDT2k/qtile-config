@@ -18,7 +18,7 @@ killall -9 aw-server
 killall -9 aw-watcher-afk
 killall -9 aw-watcher-window
 
-killall -9 compton
+killall -9 picom
 
 
 
@@ -37,7 +37,8 @@ xiccd &
 colormgr device-set-enabled "xrandr-Ancor Communications Inc-ASUS VS238-BCLMTF008344" True
 colormgr device-set-enabled "xrandr-Philips Consumer Electronics Company-PHL 243V5-ZV0154600052" True
 colormgr device-set-enabled "xrandr-Samsung Electric Company-S34J55x-H4ZMC01890" True
-compton &
+#compton &
+picom --config ~/.config/qtile/.conf/picom.conf &
 
 
 #feh --bg-fill ~/background.jpg &
