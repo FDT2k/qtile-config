@@ -4,13 +4,26 @@ DIR=$(dirname $0)
 FOLDER="$HOME/Pictures/themes"
 OPTS=$(ls -l $FOLDER | awk 'NR>1 {print $NF}')
 
-STR="$2"
+STR="$1"
 
 
 
-choice=$(echo -e "$OPTS" | rofi -lines 5 -dmenu -p "Theme")
 
+choice=$(echo -e "$OPTS" | rofi -lines 10 -dmenu -p "Theme")
+
+convert $FOLDER/$choice   -scale 10% -scale 1000%  ~/.cache/wal/wallpaper.png
+
+#store choice for workspace 
+
+
+cp -a $FOLDER/$choice ~/.cache/wal/current-theme.jpg
+
+rm  ~/.cache/wal/.theme-$STR.jpg
+ln -s  $FOLDER/$choice ~/.cache/wal/.theme-$STR.jpg
 
 wal -i $FOLDER/$choice
 
+qtile cmd-obj -o cmd -f restart
+
 . $DIR/reload
+. $DIR/sddm
