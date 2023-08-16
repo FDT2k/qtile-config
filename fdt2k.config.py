@@ -31,7 +31,7 @@ from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
 from libqtile.log_utils import logger
 from typing import List  # noqa: F401
-from rofi import Rofi
+#from rofi import Rofi
 #from libqtile import xcbq
 #xcbq.keysyms["XF86AudioRaiseVolume"] = 0x1008ff13
 #xcbq.keysyms["XF86AudioLowerVolume"] = 0x1008ff11
@@ -45,8 +45,8 @@ alt = "mod1"
 ctrl = "control"
 shft =  "shift"
 
-rofi_l = Rofi(rofi_args=['-theme', '~/.config/rofi/left_toolbar.rasi'])
-rofi_r = Rofi(rofi_args=['-theme', '~/.config/rofi/right_toolbar.rasi'])
+#rofi_l = Rofi(rofi_args=['-theme', '~/.config/rofi/left_toolbar.rasi'])
+#rofi_r = Rofi(rofi_args=['-theme', '~/.config/rofi/right_toolbar.rasi'])
 
 
 def get_net_dev():
@@ -142,7 +142,7 @@ def network_widget(qtile):
         connected = ' Turn Wifi On'
         active= "on"
     options = [connected,' Bandwith Monitor (CLI)', ' Network Manager (CLI)', ' Network Manager (GUI)']
-    index, key = rofi_r.select(wifi_icon + internet, options)
+    index, key = rofi_r.select(wifi_icon + internet + "\n ", options)
     if key == -1:
         rofi_r.close()
     else:
@@ -324,7 +324,7 @@ keys = [
     Key([mod, alt], "2", lazy.spawn(command.middle_screen_brightness)),
     Key([mod, alt], "3", lazy.spawn(command.right_screen_brightness)),
     Key([mod, alt], "1", lazy.spawn(command.left_screen_brightness)),
-    Key([mod, alt], "n", lazy.function(network_widget)),
+   # Key([mod, alt], "n", lazy.function(network_widget)),
     
     # launch graphic layout
 #    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
@@ -480,7 +480,7 @@ screens = [
                 widget.TextBox(
                     font="Arial",
                     foreground="#CACACA",
-                    text="◤ ",
+                    text="◤",
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
