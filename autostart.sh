@@ -24,6 +24,7 @@ killall -9 picom
 
 aw-qt &
 xiccd & 
+copyq &
 
 #colormgr device-add-profile "xrandr-Samsung Electric Company-S34J55x-H4ZMC01890" icc-baa5c26a2b05f1d90d199da25b68342c
 #colormgr device-make-profile-default "xrandr-Samsung Electric Company-S34J55x-H4ZMC01890" icc-baa5c26a2b05f1d90d199da25b68342c

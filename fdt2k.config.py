@@ -151,6 +151,7 @@ class command:
     app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
     configure = os.path.join(os.path.dirname(
         __file__), 'bin/run.sh configure.d Configure')
+    #run = os.path.join(os.path.dirname(__file__), 'bin/run')
     run = os.path.join(os.path.dirname(__file__), 'bin/run')
     pacman = os.path.join(os.path.dirname(__file__),
                           'bin/run.sh pacman.d Pacman')
@@ -169,7 +170,9 @@ class command:
                          'bin/pulsaudio/sound-output.sh')
     theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick ' )
     screen_layout = os.path.join(os.path.dirname(
-        __file__), 'bin/run.sh screenlayout.d "Monitor Layout"')
+        __file__), 'bin/run.sh screenlayout.d "Monitor Layout"'),
+    copyq = os.path.join(os.path.dirname(
+        __file__), 'bin/copyq.sh'),
 
 
 class theme:
@@ -193,6 +196,8 @@ class theme_neg:
 def set_vertical_monitor_layout(qtile):
     qtile.cmd_spawn(command.home_screen_layout)
 
+def run_prompt(qtile):
+    qtile.cmd_spawn(command.run)
 
 def set_horizontal_monitor_layout(qtile):
     qtile.cmd_spawn(command.work_screen_layout)
@@ -313,7 +318,8 @@ keys = [
     Key([mod, alt], "n", lazy.spawn("networkmanager_dmenu")),
     Key([mod, alt], "q", lazy.spawn(command.browser)),
     Key([mod, alt], "a", lazy.spawn(command.app_menu)),
-    Key([mod], "r", lazy.spawn(command.run)),
+    #Key([mod], "r", lazy.spawn(command.run)),
+    Key([mod], "r", lazy.function(run_prompt)),
     Key([mod, alt], "p", lazy.spawn(command.pacman)),
     Key([mod, ctrl], "p", lazy.spawn(command.power)),
     Key([mod, alt], "b", lazy.spawn(command.barrier)),
@@ -330,6 +336,8 @@ keys = [
     Key([mod, alt], "3", lazy.spawn(command.right_screen_brightness)),
     Key([mod, alt], "1", lazy.spawn(command.left_screen_brightness)),
 
+    Key([mod, alt], "c", lazy.spawn(command.copyq)),
+    
 
     # launch graphic layout
     #    Key([mod, alt], "y", lazy.function(set_vertical_monitor_layout)),
@@ -954,6 +962,7 @@ cursor_warp = False
     {'wmclass': 'file_progress'},
     {'wmclass': 'notification'},
     {'wmclass': 'splash'},
+    {'wmclass': 'copyq'},
     {'role': 'dialog'},
     {'wmclass': 'toolbar'},
     {'wmclass': 'xcalc'},
@@ -976,6 +985,7 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='confirm'),
     Match(wm_class='dialog'),
     Match(wm_class='download'),
+    Match(wm_class='copyq'),
     Match(wm_class="xcalc"),
     Match(wm_class='error'),
     Match(wm_class='notification'),
