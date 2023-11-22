@@ -481,7 +481,7 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
              height=0.9, x=0.05, y=0.05, opacity=0.95, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
     DropDown('spotify', 'spotify', width=0.8,
              height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='spotify'), on_focus_lost_hide=False),
-   DropDown('telegram', 'telegram-desktop', width=0.8,
+    DropDown('telegram', 'telegram-desktop', width=0.8,
              height=0.8, x=0.1, y=0.1, opacity=1, match =Match(wm_class='telegram-desktop'), on_focus_lost_hide=False),
     DropDown('mixer', 'pavucontrol', width=0.4,
              height=0.6, x=0.3, y=0.1, opacity=1),
@@ -496,7 +496,9 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
     DropDown('gitahead', 'gitahead',
               width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gitahead'), on_focus_lost_hide=False),
     DropDown('doc', 'google-chrome-stable',
-              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='google-chrome'), on_focus_lost_hide=False),              
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='google-chrome'), on_focus_lost_hide=False),          
+     DropDown('discord', 'discord',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='discord'), on_focus_lost_hide=False),              
 ],single=True))
 
 keys.extend([
@@ -509,6 +511,7 @@ keys.extend([
     Key([mod,ctrl], "8", lazy.group['scratchpad'].dropdown_toggle('gitahead')),
     Key([mod,ctrl], "9", lazy.group['scratchpad'].dropdown_toggle('mixer')),
     Key([mod,ctrl], "0", lazy.group['scratchpad'].dropdown_toggle('doc')),
+    Key([mod,ctrl], "d", lazy.group['scratchpad'].dropdown_toggle('discord')),
 
 ])
 
@@ -525,19 +528,18 @@ for room in rooms:
 layouts = [
     #    layout.Stack(num_stacks=2),
     # Try more layouts by unleashing below layouts.
-    layout.Bsp(
-        border_width=4,
-        border_focus=theme.bg_active,
-        border_normal=theme.bg,
-        margin=theme.margin
-    ),
     layout.Max(
           border_width=2,
         border_focus=theme.bg_active,
         border_normal=theme.bg,
         margin=theme.margin
     ),
-
+    layout.Bsp(
+        border_width=4,
+        border_focus=theme.bg_active,
+        border_normal=theme.bg,
+        margin=theme.margin
+    ),
     #     layout.Columns(),
     # layout.Matrix(),
     #layout.MonadTall(),
@@ -559,12 +561,6 @@ layouts = [
         margin_left=theme.margin,
         margin_y = theme.margin,
         padding_y = theme.margin
-    ),
-     layout.Columns(
-      
-      
-        margin=theme.margin,
-      
     ),
     # layout.VerticalTile(),
     #layout.Zoomy(columnwidth=500),
@@ -755,7 +751,7 @@ screens = [
                     fontsize=(FONT_SIZE*5.25),
                     padding=-1
                 ),
-               # widget.Systray(),
+                widget.Systray(),
                 widget.Clock(format='%d.%m.%Y %H:%M'),
 
                 #       widget.Volume(get_volume_command="pamixer --get-volume",emoji=True),
@@ -769,173 +765,173 @@ screens = [
 
         ),
     ),
-    Screen(
-        top=bar.Bar([
-            widget.Spacer(10),
-                widget.CurrentLayout(),
-               
-                widget.TextBox(
-                    font="Arial",
-                    foreground=theme_neg.bg,
-                    text="◢",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-                widget.GroupBox(disable_drag=True,
-                                background=theme_neg.bg,
-                                foreground=theme_neg.fg,
-                                active=theme_neg.fg,
-                                inactive=theme_neg.contrasted,
-                                this_current_screen_border=theme.bg,
-                                other_current_screen_border=theme.bg_other,
-                                other_screen_border=theme.bg_other,
-                                borderwidth=1,
-                                highlight_method='border',
-                                font='Open Sans',
-                                fontsize=12,
-                                visible_groups=get_workspace_groups(wsp['current']),
-                                ),
-                widget.TextBox(
-                    font="Arial",
-                    foreground=theme_neg.bg,
-                    text="◤ ",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-                widget.Prompt(),
-
-
-                widget.WindowName(padding=0),
-
-                # widget.TextBox("default config", name="default"),
-
-                widget.TextBox(
-                    font="Arial",
-                    foreground="#CACACA",
-                    text="◢",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-                widget.NetGraph(
-                    bandwidth_type="up",
-                    type="linefill",
-                    background="#CACACA",
-
-                    line_width=1
-                ),
-
-                widget.CPUGraph(
-                    type="box",
-                    graph_color=theme.bg_active,
-                    border_color=theme.bg_active,
-                    background="#CACACA",
-                    border_width=2,
-                    line_width=1
-                ),
-                widget.MemoryGraph(
-                    type="box",
-                    graph_color=theme.bg_active,
-                    border_color=theme.bg_active,
-                    background="#CACACA",
-
-                    border_width=2,
-                    line_width=1
-                ),
-                widget.TextBox(
-                    font="Arial",
-                    foreground="#CACACA",
-                    text="◤ ",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-              widget.Spacer(10),
-               
-            ], 28,background=theme.bg, margin= [10,10,0,10]),
-    ),
-    Screen(
-        top=bar.Bar([
-            widget.Spacer(10),
-                widget.CurrentLayout(),
-               
-                widget.TextBox(
-                    font="Arial",
-                    foreground=theme_neg.bg,
-                    text="◢",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-               widget.GroupBox(disable_drag=True,
-                                background=theme_neg.bg,
-                                foreground=theme_neg.fg,
-                                active=theme_neg.fg,
-                                inactive=theme_neg.contrasted,
-                                this_current_screen_border=theme.bg,
-                                other_current_screen_border=theme.bg_other,
-                                other_screen_border=theme.bg_other,
-                                borderwidth=1,
-                                highlight_method='border',
-                                font='Open Sans',
-                                fontsize=12,
-                                visible_groups=get_workspace_groups(wsp['current']),
-                                ),
-                widget.TextBox(
-                    font="Arial",
-                    foreground=theme_neg.bg,
-                    text="◤ ",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-                widget.Prompt(),
-
-
-                widget.WindowName(padding=0),
-
-                # widget.TextBox("default config", name="default"),
-
-                widget.TextBox(
-                    font="Arial",
-                    foreground="#CACACA",
-                    text="◢",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-                widget.NetGraph(
-                    bandwidth_type="up",
-                    type="linefill",
-                    background="#CACACA",
-
-                    line_width=1
-                ),
-
-                widget.CPUGraph(
-                    type="box",
-                    graph_color=theme.bg_active,
-                    border_color=theme.bg_active,
-                    background="#CACACA",
-                    border_width=2,
-                    line_width=1
-                ),
-                widget.MemoryGraph(
-                    type="box",
-                    graph_color=theme.bg_active,
-                    border_color=theme.bg_active,
-                    background="#CACACA",
-
-                    border_width=2,
-                    line_width=1
-                ),
-                widget.TextBox(
-                    font="Arial",
-                    foreground="#CACACA",
-                    text="◤ ",
-                    fontsize=(FONT_SIZE*5.25),
-                    padding=-1
-                ),
-                 widget.Systray(),
-              widget.Spacer(10),
-               
-            ], 28,background=theme.bg, margin= [10,10,0,10]),
-    )
+    #Screen(
+    #    top=bar.Bar([
+    #        widget.Spacer(10),
+    #            widget.CurrentLayout(),
+    #           
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground=theme_neg.bg,
+    #                text="◢",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #            widget.GroupBox(disable_drag=True,
+    #                            background=theme_neg.bg,
+    #                            foreground=theme_neg.fg,
+    #                            active=theme_neg.fg,
+    #                            inactive=theme_neg.contrasted,
+    #                            this_current_screen_border=theme.bg,
+    #                            other_current_screen_border=theme.bg_other,
+    #                            other_screen_border=theme.bg_other,
+    #                            borderwidth=1,
+    #                            highlight_method='border',
+    #                            font='Open Sans',
+    #                            fontsize=12,
+    #                            visible_groups=get_workspace_groups(wsp['current']),
+    #                            ),
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground=theme_neg.bg,
+    #                text="◤ ",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #            widget.Prompt(),
+#
+#
+    #            widget.WindowName(padding=0),
+#
+    #            # widget.TextBox("default config", name="default"),
+#
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground="#CACACA",
+    #                text="◢",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #            widget.NetGraph(
+    #                bandwidth_type="up",
+    #                type="linefill",
+    #                background="#CACACA",
+#
+    #                line_width=1
+    #            ),
+#
+    #            widget.CPUGraph(
+    #                type="box",
+    #                graph_color=theme.bg_active,
+    #                border_color=theme.bg_active,
+    #                background="#CACACA",
+    #                border_width=2,
+    #                line_width=1
+    #            ),
+    #            widget.MemoryGraph(
+    #                type="box",
+    #                graph_color=theme.bg_active,
+    #                border_color=theme.bg_active,
+    #                background="#CACACA",
+#
+    #                border_width=2,
+    #                line_width=1
+    #            ),
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground="#CACACA",
+    #                text="◤ ",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #          widget.Spacer(10),
+    #           
+    #        ], 28,background=theme.bg, margin= [10,10,0,10]),
+    #),
+    #Screen(
+    #    top=bar.Bar([
+    #        widget.Spacer(10),
+    #            widget.CurrentLayout(),
+    #           
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground=theme_neg.bg,
+    #                text="◢",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #           widget.GroupBox(disable_drag=True,
+    #                            background=theme_neg.bg,
+    #                            foreground=theme_neg.fg,
+    #                            active=theme_neg.fg,
+    #                            inactive=theme_neg.contrasted,
+    #                            this_current_screen_border=theme.bg,
+    #                            other_current_screen_border=theme.bg_other,
+    #                            other_screen_border=theme.bg_other,
+    #                            borderwidth=1,
+    #                            highlight_method='border',
+    #                            font='Open Sans',
+    #                            fontsize=12,
+    #                            visible_groups=get_workspace_groups(wsp['current']),
+    #                            ),
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground=theme_neg.bg,
+    #                text="◤ ",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #            widget.Prompt(),
+#
+#
+    #            widget.WindowName(padding=0),
+#
+    #            # widget.TextBox("default config", name="default"),
+#
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground="#CACACA",
+    #                text="◢",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #            widget.NetGraph(
+    #                bandwidth_type="up",
+    #                type="linefill",
+    #                background="#CACACA",
+#
+    #                line_width=1
+    #            ),
+#
+    #            widget.CPUGraph(
+    #                type="box",
+    #                graph_color=theme.bg_active,
+    #                border_color=theme.bg_active,
+    #                background="#CACACA",
+    #                border_width=2,
+    #                line_width=1
+    #            ),
+    #            widget.MemoryGraph(
+    #                type="box",
+    #                graph_color=theme.bg_active,
+    #                border_color=theme.bg_active,
+    #                background="#CACACA",
+#
+    #                border_width=2,
+    #                line_width=1
+    #            ),
+    #            widget.TextBox(
+    #                font="Arial",
+    #                foreground="#CACACA",
+    #                text="◤ ",
+    #                fontsize=(FONT_SIZE*5.25),
+    #                padding=-1
+    #            ),
+    #             widget.Systray(),
+    #          widget.Spacer(10),
+    #           
+    #        ], 28,background=theme.bg, margin= [10,10,0,10]),
+    #)
 ]
 
 # Drag floating layouts.
