@@ -1,4 +1,4 @@
 #!/bin/bash
 DIR=$(dirname $0)
 
-/home/fabien/Documents/fastwork/MacOS/kda-launch/high-sierra.sh
+/home/fabien/Virt/MacOS/kda-launch/high-sierra/high-sierra.sh
