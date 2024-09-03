@@ -35,9 +35,12 @@ copyq &
 
 
 
-colormgr device-set-enabled "xrandr-Ancor Communications Inc-ASUS VS238-BCLMTF008344" True
-colormgr device-set-enabled "xrandr-Philips Consumer Electronics Company-PHL 243V5-ZV0154600052" True
-colormgr device-set-enabled "xrandr-Samsung Electric Company-S34J55x-H4ZMC01890" True
+#colormgr device-set-enabled "xrandr-Ancor Communications Inc-ASUS VS238-BCLMTF008344" True
+#colormgr device-set-enabled "xrandr-Philips Consumer Electronics Company-PHL 243V5-ZV0154600052" True
+#colormgr device-set-enabled "xrandr-Samsung Electric Company-S34J55x-H4ZMC01890" True
+
+colormgr device-set-enabled "xrandr-Samsung Electric Company-LS49A950U-HNTW500196" True
+
 #compton &
 picom --config ~/.config/qtile/.conf/picom.conf &
 
