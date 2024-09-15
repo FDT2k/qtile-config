@@ -29,6 +29,8 @@ import json
 import sys
 import os
 import subprocess
+from workspace_conf import workspaces, rooms
+from workspace_state import workspace_state
 from libqtile.config import Key, Screen, Group, Drag, Click, Match, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
@@ -37,22 +39,10 @@ from libqtile.log_utils import logger
 from settings import mod, alt, ctrl, shft, home, color
 from commands import command
 from theme import theme, theme_neg
-from workspaces import workspaces, rooms, groups, get_workspace_groups,get_group_name,to_workspace,to_room,window_to_workspace,window_to_room
+from workspace_fun import get_group_name,to_workspace,to_room,window_to_workspace,window_to_room, get_workspace_groups
 #from fdt2k_widgets import *
 
 
-# Oops, time for a little hack there.
-# This is a global object with information about current workspace.
-# (viable as config code, not sure about client-server though)
-wsp = {
-    'current': workspaces[0][0], # first workspace is active by default
-}
-
-# ... and information about active group in the each workspace.
-for w, _ in workspaces:
-    wsp[w] = {
-        'active_group': get_group_name(w, rooms[0]) # first room is active by default
-    }
 
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):
@@ -91,7 +81,43 @@ def agroup(client):
 
 
 
+# Create individual Group for each (workspace,room) combination we have
+groups = []
+for workspace, hotkey in workspaces:
+    for room in rooms:
+        groups.append(Group(get_group_name(workspace, room)))
 
+
+
+
+groups.append(ScratchPad(name='scratchpad', dropdowns=[
+    DropDown('terminal', 'terminator', width=0.9,
+             height=0.9, x=0.05, y=0.05, opacity=0.95, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
+    DropDown('spotify', 'spotify', width=0.8,
+             height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='spotify'), on_focus_lost_hide=False),
+    DropDown('telegram', 'telegram-desktop', width=0.8,
+             height=0.8, x=0.1, y=0.1, opacity=1, match =Match(wm_class='telegram-desktop'), on_focus_lost_hide=False),
+    DropDown('mixer', 'pavucontrol', width=0.4,
+             height=0.6, x=0.3, y=0.1, opacity=1),
+    DropDown('bitwarden', 'bitwarden-desktop',
+             width=0.6, height=0.6, x=0.2, y=0.1, opacity=1 ,match =Match(wm_class='bitwarden-desktop'), on_focus_lost_hide=False),
+    DropDown('clickup', 'clickup',
+             width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='clickup'), on_focus_lost_hide=False),
+    DropDown('thunderbird', 'thunderbird',
+             width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,on_focus_lost_hide=False),
+    DropDown('blueman', 'blueman-manager',
+             width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,on_focus_lost_hide=False),
+    DropDown('gitahead', 'gitahead',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gitahead'), on_focus_lost_hide=False),
+    DropDown('doc', 'google-chrome-stable',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='google-chrome'), on_focus_lost_hide=False),          
+     DropDown('discord', 'discord',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='discord'), on_focus_lost_hide=False),              
+],single=True))
+
+
+
+#end of workspaces
 
 
 
@@ -469,7 +495,7 @@ screens = [
                                 highlight_method='border',
                                 font='Open Sans',
                                 fontsize=12,
-                                visible_groups=get_workspace_groups(wsp['current']),
+                                visible_groups=get_workspace_groups(workspace_state.get_current()),
                                 ),
                 widget.TextBox(
                     font="Arial",
