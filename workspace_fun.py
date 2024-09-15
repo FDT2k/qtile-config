@@ -1,5 +1,6 @@
 from libqtile.config import Group, ScratchPad, DropDown, Match
 from libqtile.log_utils import logger
+from libqtile import layout, bar, widget, hook
 from workspace_state import workspace_state
 from workspace_conf import workspaces,rooms,get_group_name
 # ----------------------------
@@ -39,7 +40,7 @@ def to_workspace(workspace):
             ]
             screen.set_group(g)
             for i,__widget in enumerate( screen.top.widgets):
-                logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
+               # logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
                 if type(__widget) is widget.groupbox.GroupBox :
                     __widget.visible_groups=get_workspace_groups(workspace)
                     __widget.draw()

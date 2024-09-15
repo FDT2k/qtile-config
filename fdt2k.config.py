@@ -75,7 +75,7 @@ def agroup(client):
     group = apps.get(wm_class, None)
     logger.error("class %s %s" , wm_class,group)
     if group:
-        client.togroup(get_group_name(wsp['current'], group))
+        client.togroup(get_group_name(workspace_state.get_current(), group))
         #to_room(group)
 #        client.togroup(group)
 
