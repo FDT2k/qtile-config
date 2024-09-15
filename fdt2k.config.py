@@ -37,12 +37,22 @@ from libqtile.log_utils import logger
 from settings import mod, alt, ctrl, shft, home, color
 from commands import command
 from theme import theme, theme_neg
-from workspaces import workspaces, rooms, groups, get_workspace_groups,wsp
+from workspaces import workspaces, rooms, groups, get_workspace_groups
 #from fdt2k_widgets import *
 
 
+# Oops, time for a little hack there.
+# This is a global object with information about current workspace.
+# (viable as config code, not sure about client-server though)
+wsp = {
+    'current': workspaces[0][0], # first workspace is active by default
+}
 
-
+# ... and information about active group in the each workspace.
+for w, _ in workspaces:
+    wsp[w] = {
+        'active_group': get_group_name(w, rooms[0]) # first room is active by default
+    }
 
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):

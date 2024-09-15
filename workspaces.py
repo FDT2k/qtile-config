@@ -17,12 +17,7 @@ workspaces = [
 # be changed to different ones as well. Minor changes required.
 rooms = "asdfq"
 
-# Oops, time for a little hack there.
-# This is a global object with information about current workspace.
-# (viable as config code, not sure about client-server though)
-wsp = {
-    'current': workspaces[0][0], # first workspace is active by default
-}
+
 
 
 
@@ -42,11 +37,7 @@ def get_group_name(workspace, room):
     """
     return "%s%s" % (room, workspace)
 
-# ... and information about active group in the each workspace.
-for w, _ in workspaces:
-    wsp[w] = {
-        'active_group': get_group_name(w, rooms[0]) # first room is active by default
-    }
+
 
 def get_workspace_groups(workspace):
     """ Get list of Groups that belongs to workspace.
