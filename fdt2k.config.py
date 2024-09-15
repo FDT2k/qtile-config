@@ -37,7 +37,7 @@ from libqtile.log_utils import logger
 from settings import mod, alt, ctrl, shft, home, color
 from commands import command
 from theme import theme, theme_neg
-from workspaces import workspaces, rooms, groups, get_workspace_groups
+from workspaces import workspaces, rooms, groups, get_workspace_groups,get_group_name,to_workspace,to_room,window_to_workspace,window_to_room
 #from fdt2k_widgets import *
 
 
