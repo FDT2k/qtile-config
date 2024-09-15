@@ -35,34 +35,14 @@ from libqtile import layout, bar, widget, hook
 from libqtile.log_utils import logger
 #from typing import List  # noqa: F401
 from settings import mod, alt, ctrl, shft, home, color
-
+from commands import command
+from theme import theme, theme_neg
+from workspaces import workspaces, rooms, groups, get_workspace_groups,wsp
 #from fdt2k_widgets import *
 
 
 
 
-# List of available workspaces.
-# Each workspace has its own prefix and hotkey.
-workspaces = [
-    ('1', 'F1'),
-    ('2', 'F2'),
-    ('3', 'F3'),
-    ('4', 'F4'),
-    ('o', 'F5'),
-    ('p', 'F6'),
-]
-
-# List of available rooms.
-# Rooms are identical between workspaces, but they can
-# be changed to different ones as well. Minor changes required.
-rooms = "asdfq"
-
-# Oops, time for a little hack there.
-# This is a global object with information about current workspace.
-# (viable as config code, not sure about client-server though)
-wsp = {
-    'current': workspaces[0][0], # first workspace is active by default
-}
 
 @hook.subscribe.screen_change
 def restart_on_randr(qtile, ev):
@@ -106,72 +86,6 @@ def agroup(client):
 
 
 
-class command:
-    #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
-    autostart = os.path.join(os.path.dirname(__file__), 'bin/autostart')
-    lock = os.path.join(os.path.dirname(__file__), 'bin/lock')
-    suspend = os.path.join(os.path.dirname(__file__), 'bin/suspend')
-    hibernate = os.path.join(os.path.dirname(__file__), 'bin/hibernate')
-    home_screen_layout = os.path.join(os.path.dirname(
-        __file__), 'bin/monitor_layout/home-layout.sh')
-    work_screen_layout = os.path.join(os.path.dirname(
-        __file__), 'bin/monitor_layout/vertical_layout.sh')
-    samsung_screen_layout = os.path.join(os.path.dirname(
-        __file__), 'bin/monitor_layout/samsung-uwide-no-edp.sh')
-    samsung_screen_dual_layout = os.path.join(os.path.dirname(
-        __file__), 'bin/monitor_layout/samsung-uwide-with-edp.sh')
-    terminal = "terminator -b"
-    volume_up = os.path.join(os.path.dirname(__file__), 'bin/raisevolume')
-    volume_down = os.path.join(os.path.dirname(__file__), 'bin/lowervolume')
-    volume_mute = os.path.join(os.path.dirname(__file__), 'bin/mutevolume')
-    shoot = os.path.join(os.path.dirname(__file__), 'bin/shot.sh')
-    record = os.path.join(os.path.dirname(__file__), 'bin/record.sh')
-    browser = os.path.join(os.path.dirname(__file__),
-                           'bin/run.sh browser.d Browser')
-    app_menu = os.path.join(os.path.dirname(__file__), 'bin/run.sh run.d App')
-    configure = os.path.join(os.path.dirname(
-        __file__), 'bin/run.sh configure.d Configure')
-    #run = os.path.join(os.path.dirname(__file__), 'bin/run')
-    run = os.path.join(os.path.dirname(__file__), 'bin/run')
-    pacman = os.path.join(os.path.dirname(__file__),
-                          'bin/run.sh pacman.d Pacman')
-    barrier = os.path.join(os.path.dirname(__file__),
-                           'bin/run.sh barrier.d Barrier')
-    power = os.path.join(os.path.dirname(__file__),'bin/run.sh power.d Power')
-    virt = os.path.join(os.path.dirname(__file__),'bin/run.sh osx.d Virt')
-    #power = os.path.join(os.path.dirname(__file__),'rofi/powermenu.sh')
-    middle_screen_brightness = os.path.join(
-        os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
-    right_screen_brightness = os.path.join(
-        os.path.dirname(__file__), 'bin/brightness.sh DVI-I-1')
-    left_screen_brightness = os.path.join(
-        os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1-0')
-    sound = os.path.join(os.path.dirname(__file__),
-                         'bin/pulsaudio/sound-output.sh')
-    theme = os.path.join(os.path.dirname(__file__), 'bin/theme/pick ' )
-    screen_layout = os.path.join(os.path.dirname(
-        __file__), 'bin/run.sh screenlayout.d "Monitor Layout"'),
-    copyq = os.path.join(os.path.dirname(
-        __file__), 'bin/copyq.sh'),
-
-
-class theme:
-    bg = color[0]
-    fg = color[7]
-    bg_active = color[1]
-    contrasted = color[6]
-    bg_other=  color[8]
-     
-    margin = 10
-
-class theme_neg:
-    bg = color[2]
-    fg = color[0]
-    bg_active = color[6]
-    contrasted = color[7]
-    bg_other=  color[6]
-    
-    margin = 10
 
 def set_vertical_monitor_layout(qtile):
     qtile.cmd_spawn(command.home_screen_layout)
@@ -345,142 +259,6 @@ keys = [
 
 
 
-# ----------------------------
-# --- Workspaces and Rooms ---
-# ----------------------------
-
-# The basic idea behind Workspaces and Rooms is to control
-# DIFFERENT subsets of groups with the SAME hotkeys.
-# So we can have multiple 'qwerasdf' rooms in a different workspaces.
-#
-# Qtile Groups are used behind the scenes, but their visibility
-# is set dynamically.
-
-def get_group_name(workspace, room):
-    """ Calculate Group name based on (workspace,room) combination.
-    """
-    return "%s%s" % (room, workspace)
-
-# ... and information about active group in the each workspace.
-for w, _ in workspaces:
-    wsp[w] = {
-        'active_group': get_group_name(w, rooms[0]) # first room is active by default
-    }
-
-def get_workspace_groups(workspace):
-    """ Get list of Groups that belongs to workspace.
-    """
-    return [ get_group_name(workspace, room) for room in rooms]
-
-def to_workspace(workspace):
-    """ Change current workspace to another one.
-    """
-    def f(qtile):
-        global wsp
-
-        # we need to save current active room(group) somewhere
-        # to return to it later
-        wsp[wsp['current']]['active_group'] = qtile.current_group.name
-
-        # now we can change current workspace to the new one
-        # (no actual switch there)
-        wsp['current'] = workspace
-        # and navigate to the active group from the workspace
-        # (actual switch)
-        #qtile.groups_map[
-        #    wsp[workspace]['active_group']
-        #].cmd_toscreen(toggle=False)
-       
-        #dispatch the workspace's groups in order on each screen
-        for idx,screen in enumerate(qtile.screens):
-            g = qtile.groups_map[
-                get_group_name(workspace,rooms[idx])
-            ]
-            screen.set_group(g)
-            for i,__widget in enumerate( screen.top.widgets):
-                logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
-                if type(__widget) is widget.groupbox.GroupBox :
-                    __widget.visible_groups=get_workspace_groups(workspace)
-                    __widget.draw()
-
-
-
-        #set_group(self, new_group, save_prev=True, warp=True):
-        # we also need to change subset of visible groups in the GroupBox widget
-        #qtile.widgets_map['groupbox'].visible_groups=get_workspace_groups(workspace)
-
-        #logger.error("screens %s" , qtile.widgets_map)
-       # qtile.widgets_map['groupbox'].draw()
-        # You can do some other cosmetic stuff here.
-        # For example, change Bar background depending on the current workspace.
-        #qtile.widgets_map['groupbox'].bar.background="ff0000"
-
-        
-    return f
-
-def to_room(room):
-    """ Change active room to another within the current workspace.
-    """
-    def f(qtile):
-        global wsp
-        qtile.groups_map[get_group_name(wsp['current'], room)].cmd_toscreen(toggle=False)
-    return f
-
-def window_to_workspace(workspace, room=rooms[0]):
-    """ Move active window to another workspace.
-    """
-    def f(qtile):
-        global wsp
-        qtile.current_window.togroup(wsp[workspace]['active_group'])
-    return f
-
-def window_to_room(room):
-    """ Move active window to another room within the current workspace.
-    """
-    def f(qtile):
-        global wsp
-        qtile.current_window.togroup(get_group_name(wsp['current'], room))
-    return f
-
-# Create individual Group for each (workspace,room) combination we have
-groups = []
-for workspace, hotkey in workspaces:
-    for room in rooms:
-        groups.append(Group(get_group_name(workspace, room)))
-
-# Assign individual hotkeys for each workspace we have
-for workspace, hotkey in workspaces:
-    keys.append(Key([mod], hotkey, lazy.function(
-        to_workspace(workspace))))
-    keys.append(Key([mod, "shift"], hotkey, lazy.function(
-        window_to_workspace(workspace))))
-
-
-groups.append(ScratchPad(name='scratchpad', dropdowns=[
-    DropDown('terminal', 'terminator', width=0.9,
-             height=0.9, x=0.05, y=0.05, opacity=0.95, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
-    DropDown('spotify', 'spotify', width=0.8,
-             height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='spotify'), on_focus_lost_hide=False),
-    DropDown('telegram', 'telegram-desktop', width=0.8,
-             height=0.8, x=0.1, y=0.1, opacity=1, match =Match(wm_class='telegram-desktop'), on_focus_lost_hide=False),
-    DropDown('mixer', 'pavucontrol', width=0.4,
-             height=0.6, x=0.3, y=0.1, opacity=1),
-    DropDown('bitwarden', 'bitwarden-desktop',
-             width=0.6, height=0.6, x=0.2, y=0.1, opacity=1 ,match =Match(wm_class='bitwarden-desktop'), on_focus_lost_hide=False),
-    DropDown('clickup', 'clickup',
-             width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='clickup'), on_focus_lost_hide=False),
-    DropDown('thunderbird', 'thunderbird',
-             width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,on_focus_lost_hide=False),
-    DropDown('blueman', 'blueman-manager',
-             width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,on_focus_lost_hide=False),
-    DropDown('gitahead', 'gitahead',
-              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gitahead'), on_focus_lost_hide=False),
-    DropDown('doc', 'google-chrome-stable',
-              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='google-chrome'), on_focus_lost_hide=False),          
-     DropDown('discord', 'discord',
-              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='discord'), on_focus_lost_hide=False),              
-],single=True))
-
 keys.extend([
     Key([mod,ctrl], "1", lazy.group['scratchpad'].dropdown_toggle('terminal')),
     Key([mod,ctrl], "2", lazy.group['scratchpad'].dropdown_toggle('telegram')),
@@ -495,6 +273,12 @@ keys.extend([
 
 ])
 
+# Assign individual hotkeys for each workspace we have
+for workspace, hotkey in workspaces:
+    keys.append(Key([mod], hotkey, lazy.function(
+        to_workspace(workspace))))
+    keys.append(Key([mod, "shift"], hotkey, lazy.function(
+        window_to_workspace(workspace))))
 # Assign shared hotkeys for each room we have.
 # Decision about actual group to open is made dynamically.
 for room in rooms:
@@ -503,7 +287,6 @@ for room in rooms:
     keys.append(Key([mod, "shift"], room, lazy.function(
         window_to_room(room))))
 
-#end of workspaces
 
 layouts = [
     #    layout.Stack(num_stacks=2),
