@@ -33,14 +33,12 @@ from libqtile.config import Key, Screen, Group, Drag, Click, Match, ScratchPad, 
 from libqtile.lazy import lazy
 from libqtile import layout, bar, widget, hook
 from libqtile.log_utils import logger
-from typing import List  # noqa: F401
+#from typing import List  # noqa: F401
+from settings import mod, alt, ctrl, shft, home, color
 
 #from fdt2k_widgets import *
 
-mod = "mod4"
-alt = "mod1"
-ctrl = "control"
-shft = "shift"
+
 
 
 # List of available workspaces.
@@ -103,27 +101,9 @@ def agroup(client):
 
 
 
-home = os.path.expanduser('~')
-
-# pywall import
-# from https://github.com/gibranlp/QARSlp/blob/6da11eb970a8b2560912eddef1615ebbbc19a048/dotfiles/.config/qtile/funct.py#L26
-##### Import Pywal Palette #####
-with open(home + '/.cache/wal/colors.json') as wal_import:
-    data = json.load(wal_import)
-    wallpaper = data['wallpaper']
-    alpha = data['alpha']
-    colors = data['colors']
-    val_colors = list(colors.values())
-
-    def getList(val_colors):
-        return [*val_colors]
 
 
-def init_colors():
-    return [*val_colors]
 
-
-color = init_colors()
 
 
 class command:
