@@ -66,7 +66,7 @@ wsp = {
 }
 
 @hook.subscribe.screen_change
-def restart_on_randr(qtile, ev):
+def screen_change():
     qtile.cmd_restart()
 
 
@@ -348,7 +348,7 @@ keys = [
 
 
     # sounds & printscreen
-    Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
+    #Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
     Key([], "XF86AudioLowerVolume", lazy.spawn(command.volume_down)),
     Key([], "XF86AudioRaiseVolume", lazy.spawn(command.volume_up)),
     Key([], "XF86AudioMute", lazy.spawn(command.volume_mute)),
@@ -677,11 +677,7 @@ screens = [
            
             [
                 widget.Spacer(10),
-                widget.CurrentLayoutIcon(
-                    padding = 0,
-                    scale = 0.5,
-                ),
-
+            
                 widget.CurrentLayout(),
                
                 widget.TextBox(
