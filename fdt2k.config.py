@@ -24,7 +24,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import subprocess
 import json
 import sys
 import os
@@ -57,7 +56,7 @@ workspaces = [
 # List of available rooms.
 # Rooms are identical between workspaces, but they can
 # be changed to different ones as well. Minor changes required.
-rooms = "asdfq"
+rooms = "asdyxc"
 
 # Oops, time for a little hack there.
 # This is a global object with information about current workspace.
@@ -395,9 +394,11 @@ def get_workspace_groups(workspace):
 def to_workspace(workspace):
     """ Change current workspace to another one.
     """
+
     def f(qtile):
         global wsp
 
+        logger.error("showing workspace %s",workspace)
         # we need to save current active room(group) somewhere
         # to return to it later
         wsp[wsp['current']]['active_group'] = qtile.current_group.name
@@ -409,19 +410,25 @@ def to_workspace(workspace):
         # (actual switch)
         #qtile.groups_map[
         #    wsp[workspace]['active_group']
-        #].cmd_toscreen(toggle=False)
+        #].toscreen(toggle=False)
        
         #dispatch the workspace's groups in order on each screen
         for idx,screen in enumerate(qtile.screens):
+            logger.error("changing screen %d",idx)
+
             g = qtile.groups_map[
                 get_group_name(workspace,rooms[idx])
             ]
+            logger.error("group %s",g)
+            
             screen.set_group(g)
-            for i,__widget in enumerate( screen.top.widgets):
-                logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
-                if type(__widget) is widget.groupbox.GroupBox :
-                    __widget.visible_groups=get_workspace_groups(workspace)
-                    __widget.draw()
+            logger.error("screen widgets %s",screen.top)
+            if screen.top != None:
+                for i,__widget in enumerate( screen.top.widgets):
+                    logger.error("screens %s %s" , type(__widget) is widget.groupbox.GroupBox, __widget)
+                    if type(__widget) is widget.groupbox.GroupBox :
+                        __widget.visible_groups=get_workspace_groups(workspace)
+                        __widget.draw()
 
 
 
@@ -443,7 +450,7 @@ def to_room(room):
     """
     def f(qtile):
         global wsp
-        qtile.groups_map[get_group_name(wsp['current'], room)].cmd_toscreen(toggle=False)
+        qtile.groups_map[get_group_name(wsp['current'], room)].toscreen(toggle=False)
     return f
 
 def window_to_workspace(workspace, room=rooms[0]):
@@ -481,8 +488,8 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
              height=0.9, x=0.05, y=0.05, opacity=0.95, match =Match(wm_class='terminator'), on_focus_lost_hide=False),
     DropDown('spotify', 'spotify', width=0.8,
              height=0.8, x=0.1, y=0.1, opacity=0.8, match =Match(wm_class='spotify'), on_focus_lost_hide=False),
-    DropDown('telegram', 'telegram-desktop', width=0.8,
-             height=0.8, x=0.1, y=0.1, opacity=1, match =Match(wm_class='telegram-desktop'), on_focus_lost_hide=False),
+    DropDown('Telegram', 'org.telegram.desktop', width=0.8,
+             height=0.8, x=0.1, y=0.1, opacity=1, match =Match(wm_class='TelegramDesktop'), on_focus_lost_hide=False),
     DropDown('mixer', 'pavucontrol', width=0.4,
              height=0.6, x=0.3, y=0.1, opacity=1),
     DropDown('bitwarden', 'bitwarden-desktop',
@@ -493,25 +500,25 @@ groups.append(ScratchPad(name='scratchpad', dropdowns=[
              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,on_focus_lost_hide=False),
     DropDown('blueman', 'blueman-manager',
              width=0.4, height=0.6, x=0.3, y=0.1, opacity=1 ,on_focus_lost_hide=False),
-    DropDown('gitahead', 'gitahead',
-              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gitahead'), on_focus_lost_hide=False),
+    DropDown('gittyup', 'gittyup',
+              width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='gittyup'), on_focus_lost_hide=False),
     DropDown('doc', 'google-chrome-stable',
               width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='google-chrome'), on_focus_lost_hide=False),          
-     DropDown('discord', 'discord',
+     DropDown('discord', 'com.discordapp.Discord',
               width=0.8, height=0.8, x=0.1, y=0.1, opacity=1,match =Match(wm_class='discord'), on_focus_lost_hide=False),              
 ],single=True))
 
 keys.extend([
     Key([mod,ctrl], "1", lazy.group['scratchpad'].dropdown_toggle('terminal')),
-    Key([mod,ctrl], "2", lazy.group['scratchpad'].dropdown_toggle('telegram')),
-    Key([mod,ctrl], "3", lazy.group['scratchpad'].dropdown_toggle('bitwarden')),
-    Key([mod,ctrl], "4", lazy.group['scratchpad'].dropdown_toggle('clickup')),
+    Key([mod,ctrl], "2", lazy.group['scratchpad'].dropdown_toggle('Telegram')),
+# Key([mod,ctrl], "3", lazy.group['scratchpad'].dropdown_toggle('bitwarden')),
+    Key([mod,ctrl], "4", lazy.group['scratchpad'].dropdown_toggle('discord')),
     Key([mod,ctrl], "5", lazy.group['scratchpad'].dropdown_toggle('blueman')),
     Key([mod,ctrl], "6", lazy.group['scratchpad'].dropdown_toggle('thunderbird')),
-    Key([mod,ctrl], "8", lazy.group['scratchpad'].dropdown_toggle('gitahead')),
+    Key([mod,ctrl], "8", lazy.group['scratchpad'].dropdown_toggle('gittyup')),
     Key([mod,ctrl], "9", lazy.group['scratchpad'].dropdown_toggle('mixer')),
     Key([mod,ctrl], "0", lazy.group['scratchpad'].dropdown_toggle('doc')),
-    Key([mod,ctrl], "d", lazy.group['scratchpad'].dropdown_toggle('discord')),
+ #   Key([mod,ctrl], "d", lazy.group['scratchpad'].dropdown_toggle('discord')),
 
 ])
 
