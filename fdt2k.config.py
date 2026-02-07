@@ -70,12 +70,6 @@ def screen_change():
     qtile.cmd_restart()
 
 
-@hook.subscribe.startup
-def autostart():
-    home = os.path.expanduser('~/.config/qtile/autostart.sh')
-    subprocess.call([home])
-
-
 @hook.subscribe.client_new
 def agroup(client):
     # replace class_name with the actual
@@ -125,6 +119,21 @@ def init_colors():
 color = init_colors()
 
 
+@lazy.function
+def disable_mouse_focus():
+    qtile.config.follow_mouse_focus = False
+@lazy.function
+def enable_mouse_focus():
+    qtile.config.follow_mouse_focus = True
+
+
+
+
+@hook.subscribe.startup
+def autostart():
+    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    subprocess.call([home])
+
 class command:
     #terminal = get_alternatives(['terminator', 'gnome-terminal', 'xterm'])
     autostart = os.path.join(os.path.dirname(__file__), 'bin/autostart')
@@ -158,6 +167,7 @@ class command:
                            'bin/run.sh barrier.d Barrier')
     power = os.path.join(os.path.dirname(__file__),'bin/run.sh power.d Power')
     virt = os.path.join(os.path.dirname(__file__),'bin/run.sh osx.d Virt')
+    worklayout = os.path.join(os.path.dirname(__file__),'bin/run.sh worklayout.d WorkLayout')
     #power = os.path.join(os.path.dirname(__file__),'rofi/powermenu.sh')
     middle_screen_brightness = os.path.join(
         os.path.dirname(__file__), 'bin/brightness.sh HDMI-A-1')
@@ -325,6 +335,8 @@ keys = [
    # Key([mod, alt], "t", lazy.spawn(command.theme+' '+wsp['current'])),
     Key([mod, alt], "t", lazy.function(pick_theme)),
     Key([mod, alt], "v", lazy.spawn(command.virt)),
+    Key([mod], "p", lazy.spawn(command.worklayout)),
+
 
     Key([mod, alt], "e", lazy.spawn(command.configure)),
     Key([mod, alt], "s", lazy.spawn(command.sound)),
@@ -768,6 +780,7 @@ screens = [
 
         ),
     ),
+     Screen(),
     #Screen(
     #    top=bar.Bar([
     #        widget.Spacer(10),
@@ -1008,3 +1021,4 @@ focus_on_window_activation = "smart"
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
